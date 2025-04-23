@@ -1,0 +1,119 @@
+---
+title: "Lab 08 - University of Edinburgh Art Collection"
+output: html_document
+---
+
+#### Created 3/3/2025
+
+link to assignment: https://datascience4psych.github.io/DataScience4Psych/lab08.html
+
+link to archived assignment: https://web.archive.org/web/20250414135303/https://datascience4psych.github.io/DataScience4Psych/lab08.html#write-out-data
+
+## Load Packages and Data  
+
+First, let's load the necessary packages:  
+
+```{r load-packages, message = FALSE, echo = FALSE}
+library(tidyverse) 
+library(dplyr)
+library(skimr)
+library(robotstxt) #use to see if can use paths_allowed
+library(rvest)
+library(magrittr)
+library(skimr)
+
+paths_allowed("https://collections.ed.ac.uk/art)")
+
+```
+
+Now, load the dataset. If your data isn't ready yet, you can leave `eval = FALSE` for now and update it when needed.  
+
+
+```{r load-data, message = FALSE, echo = FALSE}
+uoe_art <- read_csv("./data/uoe-art.csv")
+view(uoe_art)
+```
+
+## Exercise 9
+
+Let's start working with the **title** column by separating the title and the date:  
+
+```{r separate-title-date, error = TRUE}
+uoe_art <- uoe_art %>%
+  separate(title, into = c("title", "date"), sep = "\\(") %>%
+  mutate(year = str_remove(date, "\\)") %>% as.numeric()) %>%
+  select(title, artist, year, link)
+```
+
+The code was already provided, so I didn't change anything. I'm guessing the error related to "expected two pieces" is because not all pieces had both a year and an author. I can see no author in some rows (182, 533, etc.) but not in all of them. I'm also guessing that they filled in these missing pieces with "NA." There were probably rows that didn't have parentheses around years, adding to the confusion. One of the rows just gave us a "2" for the year, probably adding to the confusion about including the year.
+
+
+```{r skim, error = TRUE}
+skim(uoe_art)
+
+uoe_art %>%
+  ggplot(aes(
+    x = year
+  ))+
+  geom_bar()
+
+summary(uoe_art)
+```
+
+
+Using skim(), it appears that there are 111 artists missing from the data frame. It also appears there are 1580 data missing from the year column. One of the paintings shows a painting to be from the year 2. Death mask had an additional number in the sequence. The year should be 1964.
+
+```{r filter, error = TRUE}
+
+#Change year for Death Mask
+uoe_art_fixed <- uoe_art %>%
+  mutate(year = case_when(
+    year == "2" ~ "1964",
+    .default = as.character(year)
+  ))
+view(uoe_art_fixed)
+
+
+
+uoe_art_fixed <- uoe_art_fixed %>%
+  mutate(decade = cut(as.numeric(year), 
+                        breaks = seq(1810, 2030, by = 10), 
+                        labels = seq(1810, 2020, by = 10), 
+                        right = TRUE))
+
+
+ ggplot(data=subset(
+   uoe_art_fixed,
+   !is.na(decade)), 
+   aes(x=decade))+
+  geom_bar()+
+   labs(
+     x = "Artworks in a year by decade",
+     y = "Count",
+     title = "Endinborough Art Collection"
+   )
+```
+
+Here I used a subset of the data that got rid of the missing years and binned years to create decades. We can see there are a lot of artwork created in the mid 1900s.
+
+
+### Artist breakdown
+
+```{r artist frequency, error=TRUE}
+
+uoe_art_fixed %>%
+  count(artist, sort = TRUE)
+```
+
+The most common artist is unknown! This is followed by Emma Gillies and N/A. Apparently this database doesn't know a lot about their artworks.
+
+### Art about children
+
+
+```{r children titles, error = TRUE}
+
+filter(uoe_art_fixed, str_detect(uoe_art_fixed$title, "Child") == TRUE)
+
+```
+
+I found all cases where the title contained child and filtered for them. There are 11 total titles containing child/children.

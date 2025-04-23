@@ -1,9 +1,9 @@
 ---
 title: "Lab 03 - Nobel laureates"
-author: "Benjamin Egan"
-date: "1/27"
-output: github_document
+output: html_document
 ---
+
+#### Created 1/27/2025
 
 Link to assignment: https://datascience4psych.github.io/DataScience4Psych/lab03.html
 

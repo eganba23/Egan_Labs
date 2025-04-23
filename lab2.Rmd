@@ -1,9 +1,9 @@
 ---
 title: "Lab 02 - Plastic waste"
-author: "Benjamin Egan"
-date: "1/22/25"
-output: github_document
+output: html_document
 ---
+
+#### Created 1/22/2025
 
 Assignment link: https://datascience4psych.github.io/DataScience4Psych/lab02.html
 
