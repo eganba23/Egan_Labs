@@ -28,6 +28,7 @@ dennys %>%
 ncol()
 
 ```
+
 There are 1,643 rows and 6 columns in the Denny's dataset
 
 ### Exercise 2 - Look at La Quinta dataset
@@ -40,6 +41,7 @@ laquinta %>%
 ncol()
 
 ```
+
 There are 909 rows and 6 columns in the La Quinta dataset
 
 ### Exercise 3 - International locations?
@@ -67,6 +69,7 @@ dennys %>%
   filter(!(state %in% states$abbreviation))
 
 ```
+
 There are no Denny's outside the United States in the dataset.
 
 ...
@@ -90,6 +93,7 @@ laquinta %>%
   filter(!(state %in% states$abbreviation))
 
 ```
+
 Places and state tags for international hotels:
 Mexico (AG)
 Mexico (QR)
@@ -195,6 +199,7 @@ NC_data %>%
   )
 
 ```
+
 Visually, Mitch's joke does not appear to hold. There are a handful of locations where they are next to each other, but there are a handful of La Quintas that are not next to Denny's.
 
 ...
@@ -221,4 +226,5 @@ TX_data %>%
   )
 
 ```
+
 It looks like the joke holds up more in Texas than it does in North Carolina. There are a lot of overlapping Denny's and La Quintas.

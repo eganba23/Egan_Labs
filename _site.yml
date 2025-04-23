@@ -31,8 +31,6 @@ navbar:
       href: lab11.html
     - text: "Lab 12"
       href: lab12.html
-    - text: "Lab 13"
-      href: lab13.html
 
 output:
   html_document:

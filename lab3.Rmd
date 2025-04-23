@@ -86,6 +86,7 @@ ggplot(
   )
  
 ```
+
 More USA winners in each category. Economics has a disproportionate number of USA winners. This isn't supporting much to support the buzzfeed article.
 
 
@@ -102,6 +103,7 @@ us_born_nobel %>%
 count(born_country)
 
 ```
+
 105 people born in the USA, 123 were not.
 ...
 
@@ -127,6 +129,7 @@ ggplot(
   )
 
 ```
+
 Buzzfeed got it right about more nobel winners immigrating to USA. The only exception is if we're talking about economics, as econ winners mostly are US citizens in the united states.
 
 ...
@@ -142,4 +145,5 @@ nobel_international <- nobel %>%
   print()
 
 ```
+
 UK is most common for US immigrants who won the nobel prize.

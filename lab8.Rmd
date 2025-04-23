@@ -13,7 +13,7 @@ link to archived assignment: https://web.archive.org/web/20250414135303/https://
 
 First, let's load the necessary packages:  
 
-```{r load-packages, message = FALSE, echo = FALSE}
+```{r load-packages, message = FALSE}
 library(tidyverse) 
 library(dplyr)
 library(skimr)

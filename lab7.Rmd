@@ -21,7 +21,7 @@ In this lab, our goal is to reconstruct and improve a data visualization concern
 The following visualization was shared on Twitter as “extraordinary misleading”.
 
 ![Original Kansas Graph](Original_Graph.png)
-
+<br/>
 ### Create Kansas COVID Data
 
 ```{r Kansas COVID}
