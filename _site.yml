@@ -1,0 +1,39 @@
+name: "Benjamin Egan's Labs"
+output_dir: docs
+navbar:
+  title: "Benjamin Egan's Labs"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About Me"
+      href: about.html
+    - text: "Lab 1"
+      href: lab1.html
+    - text: "Lab 2"
+      href: lab2.html
+    - text: "Lab 3"
+      href: lab3.html
+    - text: "Lab 4"
+      href: lab4.html
+    - text: "Lab 5"
+      href: lab5.html
+    - text: "Lab 6"
+      href: lab6.html
+    - text: "Lab 7"
+      href: lab7.html
+    - text: "Lab 8"
+      href: lab8.html
+    - text: "Lab 9"
+      href: lab9.html
+    - text: "Lab 10"
+      href: lab10.html
+    - text: "Lab 11"
+      href: lab11.html
+    - text: "Lab 12"
+      href: lab12.html
+    - text: "Lab 13"
+      href: lab13.html
+
+output:
+  html_document:
+    css: Aesthetics.css

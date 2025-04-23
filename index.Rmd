@@ -1,0 +1,31 @@
+---
+title: "My Labs"
+---
+
+Hello!
+
+This website hosts a collection of labs completed for the [Data Science for Psychologists](https://datascience4psych.github.io/DataScience4Psych/) course. You can find the links to individual labs in the header or down below. Each lab should have has a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. I encourage you to explore them.
+
+
+### List of Labs 
+
+#### [Piece 1: Trajectories and Variations of Family Decision Making in the United States](p01.html)
+
+#### [Piece 2: Tragectories and Variations of Family Decision Making Across Countries](p02.html)
+
+#### [Piece 3: Creating a Monte Carlo Simulation](p03.html)
+
+#### [Piece 4: Tinkering Around Tidy Tuesday](p04.html)
+
+#### [Piece 5: Tinkering Around Tidy Tuesday Pt. 2](p05.html)
+
+#### [Piece 6: R Code Cheatsheet](p06.html)
+
+#### [Piece 7: Evaluation and tips for Lab 9](p07.html)
+
+#### [Piece 8: Simulating Data](p08.html)
+
+#### [Piece 9: ChatGPT - Is It Helpful?](p09.html)
+
+#### [Piece 10: Evaluation and tips for Lab 12](p10.html)
+
