@@ -31,5 +31,7 @@ This website hosts a collection of labs completed for the [Data Science for Psyc
 
 #### [Lab 11: Grading the professor, Pt. 2](lab11.html)
 
-#### [Lab 12: Colonizing Mars](lab12.html)
+#### [Lab 12: Smoking and Pregnancy](lab12.html)
+
+#### [Lab 13: Colonizing Mars](lab13.html)
 

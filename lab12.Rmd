@@ -1,497 +1,613 @@
 ---
-title: "Lab 12 - Colonizing Mars"
+title: "Commentary on Lab 12 - Smoking during pregnancy"
+author: "Benjamin Egan"
 output: html_document
 ---
 
-#### Created on 1/29/2025
-#### Completed on 4/23/2025
+#### Created 4/14/2025
 
-Link to assignment:https://datascience4psych.github.io/DataScience4Psych/lab13.html
+Link to the assignment page, at the time of creation: https://web.archive.org/web/20250414135227/https://datascience4psych.github.io/DataScience4Psych/lab12.html
 
-Link to archived assignment:https://web.archive.org/web/20250414135229/https://datascience4psych.github.io/DataScience4Psych/lab13.html#exercise-4-preparing-for-the-unexpected
+Link to assignment page as of `r format(Sys.time(), '%B %d %Y')`: https://datascience4psych.github.io/DataScience4Psych/lab12.html
 
-```{r load-packages, message=FALSE, warning = FALSE, echo=FALSE}
+## Commentary on Lab 12
+
+I will be walking through lab 12, designed to practice data manipulation, visualization, hypothesis testing, and calculating confidence intervals. Questions and comments from the lab that I will be addressing will be in bold. My commentary will always have "Commentary:" infront. This can make it easier to quickly skim through the document by searching for the word commentary.
+
+```{r load-packages, message=FALSE, warning = FALSE, echo = FALSE}
 library(tidyverse) 
-library(ggplot2)
-library(MASS)
-library(ggpubr)
-
-#df_colonists <- subset(df_colonists, select = -c(resilience.1, agreeableness.1)) use if you need to remove extra columns
-
+library(tidymodels)
+library(openintro)
+seed <- set.seed(123)
 ```
 
-### Exercise 1 - Simulating colonists
-
-```{r 1.1 - colonist attributes}
-
-
-set.seed(123)
-
-age <- rnorm(100, mean = 30, sd = 5)
-
-df_colonists <- data.frame(id = 1:100, age)
-                                      
-
+Loading the data
+```{r load data}
+data(ncbirths)
+#view(ncbirths)
 ```
 
+#### Before analyzing any new dataset, it’s important to get to know your data. Start by summarizing the variables and determining if their data type. Are they categorical? Are they numerical? For numerical variables, check for outliers. If you aren’t sure or want to take a closer look at the data, create a graph.
 
-
-```{r 1.1 - visualizing base colonists}
-
-data.frame(df_colonists) %>%
-ggplot(
- aes(x=age)
-)+
-  theme_bw()+
-  geom_histogram(binwidth=2,color="black", fill="blue") +
-  labs(title = "Histogram of Colonists Ages by Seed",
-       x = "Age", y = "Frequency")
-
-  
+```{r examine data}
+summary(ncbirths)
 ```
 
-This is an age distribution graph. It created a roughly normal distribution that is centered at 30. It looks like changing the seed makes the distribution more normal. The 100 seed looks normally distributed and the 1000 seed even more so. Looks like it's due to random chance, as 999 seed doesn't have the nice bellcurve shape.
+By using summary(), I know there are 7 categorical variables and 6 numerical variables.
 
+I way overengineered looking for outliers, getting help from Chat GPT.
+```{r outlier check, warning = FALSE, message = FALSE}
 
-```{r 1.3 assigning roles}
 
-role <- rep(c("engineer", "scientist", "medic"), 
-             each = 34, 
-             length.out = 100)
-
-df_colonists <- df_colonists %>%
-  mutate(role)
-
-print(role)
-```
-Here I assigned each of them roles. I chose this method mostly out of pure randomness. But I like that it listed out each role together.
-
-#### Health can be measured using the MARSGAR
-```{r 1.4 heathy, message = FALSE}
-
-set.seed(123)
-
-df_colonists$marsgar <- runif(100, min = 40, max = 100)
-
-df_colonists %>%
-ggplot( aes(
-    x = age,
-    y = marsgar
-  ) )+
-  theme_bw()+
-  geom_point()+
-  geom_smooth(method=lm, color = "black",se = FALSE)+
-  labs(
-      x = "Age",
-      y = "MARSGAR",
-      title = "Scatterplot of Age and Health"
-  )
-
-```
-
-
-### Exercise 2 - Growing the colonists' skills
-
-```{r 2.1 technical skills and visual, warning = FALSE, message = FALSE}
-
-set.seed(1235)
-
-df_colonists$technical_skills <- 2 * df_colonists$age + rnorm(100, mean = 0, sd = 1)
-
-
-df_colonists %>%
-lm(technical_skills = 2 * age + noise)
-
-df_colonists %>%
-  ggplot(aes(
-    x = age,
-    y = technical_skills
-  ))+
-  geom_point(alpha = .6)+
-  geom_line(stat = "smooth", method="lm", alpha = .6, color = "blue", se = FALSE)+
-  labs(
-    x = "Age",
-    y = "Technical Skill",
-    title = "Scatterplot of Colonist Age and Technical Skills"
-  )
-
-```
-
-Here we can see that age is about evenly distributed among the roles
-
-```{r Plot age and tehcnical skill by role}
-
-df_colonists %>%
-  ggplot(aes(
-    x = age,
-    y = technical_skills,
-    color = as.factor(role)
-  ))+
-  geom_point(alpha = .6)+
-  scale_color_manual(values=c("blue", "red","green4"))+
-  geom_line(stat = "smooth", method="lm", alpha = .6, color = "black", se = FALSE)+
-  labs(
-    x = "Age",
-    y = "Technical Skill",
-    color = "Role",
-    title = "Scatterplot of Colonist Age and Technical Skills by Role"
-  )
-
-
-```
-
-
-### Problem solving for each colonist
-
-```{r problem solving}
-
-
-d_engineer <- rnorm(100, mean = 40, sd = 5)
-d_scientist <- rnorm(100, mean = 60, sd = 7)
-d_medic <- rnorm(100, mean = 90, sd = 2)
-
-
-
-df_colonists <- df_colonists %>%
-mutate(problem_solving = case_when(
-    role == "engineer" ~ d_engineer,
-    role == "scientist" ~ d_scientist,
-    role == "medic" ~ d_medic
-  ))
-
-
-df_colonists %>%
-  ggplot(aes(
-    x = problem_solving,
-    color = role,
-    fill = role
-  ))+
-scale_fill_manual(values=c("blue", "red","green4"))+
-  scale_color_manual(values=c("blue", "red","green4"))+
-  geom_density(alpha = 0.7) +
-  theme_bw()+
-  labs(
-    y = NULL,
-    x = "Level of Problem Solving"
-  )
-```
-
-## Using mvrnorm
-
-```{r simulate resilience and agreeableness, message = FALSE}
-
-mean_traits <- c(50, 50)
-cov_matrix <- matrix(c(100, 50, 
-                       50, 100), ncol = 2)
-
-
-
-traits_data <- mvrnorm(n = 100, mu = mean_traits, Sigma = cov_matrix, empirical = FALSE)
-
-colnames(traits_data) <- c("resilience", "agreeableness")
-
-df_colonists <- cbind(df_colonists, traits_data)
-
-
-df_colonists %>%
-  ggplot(aes(
-    x = resilience,
-    y = agreeableness
-  ))+
-    geom_point()+
-  geom_line(stat = "smooth", method="lm", alpha = .6, color = "blue", se = FALSE)
-  
-
-```
-
-I used the code provided to create a correlation matrix for the big 5
-
-```{r big 5 matrix}
-
-seed <- 123
-set.seed(123)
-
-
-n_colonists <- 100
-
-
-var_names <- c( "EX", "ES", "AG", "CO", "OP")
-
-mean_traits <- c(-.5, .5, .25, .5, 0)
-sd_traits <- c(1, .9, 1, 1, 1)
-
-
-cor_matrix_bigfive <- matrix(c(
-1.0000, 0.2599, 0.1972, 0.1860, 0.2949,
-0.2599, 1.0000, 0.1576, 0.2306, 0.0720,
-0.1972, 0.1576, 1.0000, 0.2866, 0.1951,
-0.1860, 0.2306, 0.2866, 1.0000, 0.1574,
-0.2949, 0.0720, 0.1951, 0.1574, 1.0000
-), nrow=5, ncol=5, byrow=TRUE,
-dimnames=list(c("EX", "ES", "AG", "CO", "OP"), 
-c("EX", "ES", "AG", "CO", "OP")))
-
-
-eigen_values <- eigen(cor_matrix_bigfive)$values
-is_positive_definite <- all(eigen_values > 0)
-
-
-cov_matrix_bigfive <- cor_matrix_bigfive * (sd_traits %*% t(sd_traits))
-
-
-simulated_data <- mvrnorm(n = 100, mu = mean_traits, Sigma = cov_matrix_bigfive)
-
-
-simulated_data <- cbind.data.frame(colonist_id = 1:n_colonists,
-seed = seed,
-simulated_data)
-
-simulated_data$seed <- NULL
-
-view(simulated_data)
-```
-
-
-## Preparing for the unexpected
-
-I tried using a while() loop, but chat suggested using a for() loop.
-```{r simulating colonies of big five}
-
-max_colonies <- 100
-n_colonists <- 100
-MARSid_counter <- 1
-
-var_names <- c( "EX", "ES", "AG", "CO", "OP")
-
-mean_traits <- c(-.5, .5, .25, .5, 0)
-sd_traits <- c(1, .9, 1, 1, 1)
-
-cor_matrix_bigfive <- matrix(c(
-1.0000, 0.2599, 0.1972, 0.1860, 0.2949,
-0.2599, 1.0000, 0.1576, 0.2306, 0.0720,
-0.1972, 0.1576, 1.0000, 0.2866, 0.1951,
-0.1860, 0.2306, 0.2866, 1.0000, 0.1574,
-0.2949, 0.0720, 0.1951, 0.1574, 1.0000
-), nrow=5, ncol=5, byrow=TRUE,
-dimnames=list(c("EX", "ES", "AG", "CO", "OP"), 
-c("EX", "ES", "AG", "CO", "OP")))
-
-
-cov_matrix_bigfive <- cor_matrix_bigfive * (sd_traits %*% t(sd_traits))
-
-all_colonies <- list()
-
-for (colony in 1:max_colonies) {
-  set.seed(123 + colony)
-  
-  traits_data <- mvrnorm(n = n_colonists, mu = mean_traits, Sigma = cov_matrix_bigfive)
-  
-  df <- data.frame(
-    colony = colony,
-    id_in_colony = 1:n_colonists,
-    MARSid = MARSid_counter:(MARSid_counter + n_colonists - 1),
-    seed = 123 + colony,
-    traits_data
-  )
-  names(df)[5:9] <- var_names
-  
-  all_colonies[[colony]] <- df
-  MARSid_counter <- MARSid_counter + n_colonists
+base_outlier_check <- function(variable) {
+  ncbirths %>%
+  ggplot(aes(x = {{ variable }})) +
+    geom_histogram(stat = "count") +
+    labs(title = rlang::as_label(rlang::enquo(variable)), y = NULL)
 }
 
-big_simulated_data <- do.call(rbind, all_colonies)
-big_simulated_data$seed <- NULL
+map(c("fage", "mage","weeks","visits","gained","weight"), ~ base_outlier_check(!!sym(.x)))
 
+```
+
+mage could have an outlier on the upper end. I don't think weeks has an outlier, even though it's skewed left. visits may have an outlier on the upper end. weight might have one or two on the upper end, but it's skewed left.
+
+Commentary: This was pretty basic, and I made it way harder than it had to be. This could, however, be a good moment to throw it back to lab 8 and show a way to use a function. I would just guide them on the labeling bit, as it can be tricky. You can use do what I did and use base R. This allows you to input all the variables at once using map(). If you use tidyverse for the label and use deparse(substitute(variable)), you have to individually input each function and cannot mass input.
+
+#### 1. What are the cases in this data set? How many cases are there in our sample?
+
+```{r number cases}
+
+ncbirths %>%
+nrow()
+
+```
+
+There are 1000 cases, as each row represents an individual birth.
+
+### 2. Create a filtered data frame called ncbirths_white that contains data only from White mothers. Then, calculate the mean of the weights of their babies.
+
+```{r filter only white}
+
+ncbirths_white <- ncbirths %>%
+  filter(whitemom == "white")
+
+mean(ncbirths_white$weight)
 
 
 ```
 
-```{r extracting means and sd}
+The mean weight of the white babies is 7.25 lbs. The hypothesis states that there is no change in weight since 1995 (i.e. mu = 7.43). Since white babies weigh less, we need to figure out if this is a meaningful difference.
 
-colonies_means <- big_simulated_data %>% 
-  group_by(colony) %>% 
-  summarise(mean_ex = mean(EX),
-            mean_es = mean(ES),
-            mean_ag = mean(AG),
-            mean_co = mean(CO),
-            mean_op = mean(OP)
-            )
+Commentary: You/someone else included a note in the code that says "Mason make this clearer to why we need to actually do this." I don't think you need to explain, if they watched the videos or viewed the slides. What I would like more clarification on is question 3. My imagination for an answer is to create a visual for the data and see if mu falls within the CI in this sample.
 
-means_long <- colonies_means %>%
-  pivot_longer(cols = -colony)
+### 3. Are the criteria necessary for conducting simulation-based inference satisfied? Explain your reasoning.
 
-colonies_means <- means_long %>%
-  mutate(big_5 = case_when(
-    name == "mean_ex" ~ "Extraversion",
-    name == "mean_es" ~ "Neuroticism",
-    name == "mean_ag" ~ "Agreeableness",
-    name == "mean_co" ~ "Conscientiousness",
-    name == "mean_op" ~ "Openess"
-  ))
+```{r should we baby weight hypothesis test}
 
-names(colonies_means)[names(colonies_means) == "value"] <- "Mean"
-
-colonies_sd <- big_simulated_data %>% 
-  group_by(colony) %>% 
-  summarise(
-            sd_ex = sd(EX),
-            sd_es = sd(ES),
-            sd_ag = sd(AG),
-            sd_co = sd(CO),
-            sd_op = sd(OP)
-            )
-
-sd_long <- colonies_sd %>%
-  pivot_longer(cols = -colony)
-
-colonies_sd <- sd_long %>%
-  mutate(big_5 = case_when(
-    name == "sd_ex" ~ "Extraversion",
-    name == "sd_es" ~ "Neuroticism",
-    name == "sd_ag" ~ "Agreeableness",
-    name == "sd_co" ~ "Conscientiousness",
-    name == "sd_op" ~ "Openess"
-  ))
-
-names(colonies_sd)[names(colonies_sd) == "value"] <- "Standard Deviation"
-
-
-
-colonies_stats <- full_join(colonies_means, colonies_sd, by = c("colony", "big_5"))
-
-
-
-view(colonies_stats)
-
-```
-
-```{r plotting means and sd, eval = FALSE}
-
-
-means_big_data %>%
-ggplot(
-  aes(x = mean_ex)) +
-  geom_histogram(color = "black", fill = "blue", bins = 20) +
-  labs(
-    x = "Mean Extraversion", 
-    y = NULL,
-    title = "Distribution of Extraversion Mean",
-    subtitle = "Possible values range from -1 to 1"
-    )+
-  geom_vline(xintercept = -0.5, 
-             color = "white",
-             linetype = "dashed") +
-  annotate("text", 
-           x = -0.44, y = Inf, 
-           label = "Population Mean = -0.5", 
-           vjust = 2, 
-           color = "black")
-
-
-
-means_big_data %>%
-ggplot(
-  aes(x = sd_ex)) +
-  geom_histogram(color = "black", fill = "red3", bins = 20) +
-  labs(
-    x = "SD Extraversion",
-    y = NULL,
-    title = "Distribution of Extraversion Standard Deviation")+
-  geom_vline(xintercept = 1, 
-             color = "black", 
-             linetype = "dashed") +
-  annotate("text", 
-           x = .96, y = Inf, 
-           label = "Population SD = 1", 
-           vjust = 2,
-           color = "black") 
-
-#correlation
-means_big_data %>%
+ncbirths_white %>%
   ggplot(aes(
-   x = mean_ex,
-   y = mean_op
-   ))+
-  geom_point(alpha = .6)+
-  geom_smooth(method='lm', se = FALSE, formula= y~x)+
-  stat_cor(method = "pearson", label.x = -.35, label.y = .03)+
+    x = weight
+  ))+
+  geom_histogram(stat = "count", color = "blue")+
+  geom_vline(xintercept = 7.43, 
+               color = "white", 
+               linetype = "dashed")+
+   geom_vline(xintercept = 7.25, 
+               color = "red", 
+               linetype = "dashed")+
+  annotate("text", 
+           x = 4, y = Inf, 
+           label = "White = Mu, Red = Sample mean", 
+           vjust = 2, 
+           color = "black")+
+  theme_bw()+
   labs(
-    x = "Extraversion Means",
-    y = "Openness Means",
-    title = "Correlation of Extraversion and Openness across Colonies"
+    x = "Weight in lbs",
+    y = NULL,
+    title = "Distriubtion of weight",
+    subtitle = "How does this shape up to the popluation mean?"
   )
 
-#distribution of correlation
-means_big_data %>%
-ggplot(aes(x = cor_ex_op)) +
-  geom_histogram(color = "white", fill = "pink", bins = 20) +
-  labs(
-    x = "Correlation", 
-    y = "Count", 
-    title = "Distribution of Correlations of Extraversion and Openness across Colonies")+
-    geom_vline(xintercept = 0.2949, 
+```
+Based on this graph, I would guess that we probably would fail to reject, considering the mean weight is so close to the population weight. But this is only one sample, so it makes sense to use bootstrapping to better estimate the difference.
+
+## 4. Run the appropriate hypothesis test, visualize the null distribution, calculate the p-value, and interpret the results in the context of the data and the hypothesis test.
+
+#### Steps for hypothesis testing
+- take a bootstrap sample of from the original sample
+- calculate this bootstrap sample’s mean
+- repeat these two steps a large number of times to create a bootstrap distribution of means centered at the observed sample mean,
+- shift this distribution to be centered at the null value by subtracting / adding X to all bootstrap mean (X = difference between mean of bootstrap distribution and null value)
+- calculate the p-value as the proportion of bootstrap samples that yielded a sample mean at least as extreme as the observed sample mean.
+
+```{r bootstrap weight}
+seed
+
+white_weight_bootstrap <- ncbirths_white %>%
+  specify(response = weight) %>% 
+  generate(reps = 15000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+mean_white_weight_boostrap <- mean(white_weight_bootstrap$stat)
+
+white_weight_bootstrap <-  white_weight_bootstrap %>%
+  mutate(Cstat = (stat - 7.43))
+
+white_weight_bootstrap %>%
+  summarize(lower = quantile(Cstat, 0.025),
+            upper = quantile(Cstat, 0.975))
+
+
+white_weight_bootstrap %>%
+  ggplot(mapping = aes(x = Cstat)) +
+  geom_histogram() +
+  labs(title = "Bootstrap distribution of means for white baby weight", y = NULL, x = "Means")+
+  geom_vline(xintercept = 0, 
                color = "black", 
-               linetype = "dashed") +
+               linetype = "solid")+
   annotate("text", 
-           x = 0.21, y = Inf, 
-           label = "Population Correlation = 0.295", 
+           x = -.03, y = Inf, 
+           label = "Pop mean", 
            vjust = 2, 
-           color = "black")
+           color = "black")+
+  geom_vline(xintercept = -0.2847633,                 #Lower CI
+               color = "blue", 
+               linetype = "dashed")+
+  geom_vline(xintercept = -0.07682038,               #Upper CI
+               color = "blue", 
+               linetype = "dashed")+
+  annotate("text", 
+           x = -0.31, y = Inf, 
+           label = "95% CI", 
+           vjust = 2, 
+           color = "black")+
+  theme_bw()
+  
+
+# p value
+pvalue_white_weight <- white_weight_bootstrap %>%
+  mutate(sig = case_when(
+    stat <= mean_white_weight_boostrap ~ 1,
+    stat >= mean_white_weight_boostrap ~ 0,
+  ))
+
+
+white_weight_sig <- pvalue_white_weight %>%
+  filter(sig == 1)
+
+count(white_weight_sig)/15000
 
 ```
 
-For some reason I worked on it earlier and it ran, but now it doesn't. This has something to do with me moving things around and not realizing I altered them. I asked chatGPT to recreate what I wanted.
 
-```{r chat recreation of above}
+95% CI:(7.145237, 7.35318)
 
-# First, augment colonies_stats with cross‐colony correlations of EX and OP
-cor_ex_op <- big_simulated_data %>%
-  group_by(colony) %>%
-  summarize(cor_ex_op = cor(EX, OP))
+Based on this, it's clear that the population mean falls outside the confidence interval. We would reject the null and say that babies' weight has decreased since 1995.
 
-# Join that back into colonies_means / colonies_sd
-colonies_stats <- colonies_stats %>%
-  left_join(cor_ex_op, by = "colony")
+To calculate the p value, I created a variable that designated whether the mean in the bootstrap was lower than the observed mean of 7.25. I then divided the number of significant ones by the total number of observations in the bootstrap to get a p of .50, indicating that the sample means should not be significantly different from the popluation mean.
 
-# -----------------------------------------------------------------
-colonies_stats %>%
-  filter(big_5 == "Extraversion") %>%
-  ggplot(aes(x = Mean)) +
-  geom_histogram(color = "black", fill = "blue", bins = 20) +
+Commentary: I would break out the step by step instructions. It was easy to figure out how to make the graph based on the slides, so maybe add in a tip to go back and reference the slides? I will say that I believe I messed this up somewhere along the way, as my p value should be reflective of the fact that the population mean of 7.43 is way outside the confidence interval I estimated. If I had to guess, I either messed up the calculation of the p value or my interpretation of the p value.
+
+
+## Baby Weight vs Smoking
+
+#### 5. Make side-by-side box plots displaying the relationship between habit and weight. What does the plot highlight about the relationship between these two variables?
+
+Commentary: I would specify here if you want us to continue to utilize only White babies or all babies. I am assuming you want us to use all babies here.
+
+```{r box plot habit weight}
+
+ncbirths %>%
+  ggplot(aes(
+    x = habit,
+    y = weight
+  ))+
+    geom_boxplot()+
   labs(
-    x = "Mean Extraversion",
-    y = NULL,
-    title = "Distribution of Extraversion Mean",
-    subtitle = "Possible values range from -1 to 1"
-  ) +
-  geom_vline(xintercept = -0.5, linetype = "dashed") +
-  annotate("text", x = -0.44, y = Inf, label = "Population Mean = -0.5", vjust = 2)
-
-# -----------------------------------------------------------------
-colonies_stats %>%
-  filter(big_5 == "Extraversion") %>%
-  ggplot(aes(x = `Standard Deviation`)) +
-  geom_histogram(color = "black", fill = "red3", bins = 20) +
-  labs(
-    x = "SD Extraversion",
-    y = NULL,
-    title = "Distribution of Extraversion Standard Deviation"
-  ) +
-  geom_vline(xintercept = 1, linetype = "dashed") +
-  annotate("text", x = 0.96, y = Inf, label = "Population SD = 1", vjust = 2)
-
-# -----------------------------------------------------------------
-# Distribution of per‐colony EX–OP correlations
-colonies_stats %>%
-  ggplot(aes(x = cor_ex_op)) +
-  geom_histogram(color = "white", fill = "pink", bins = 20) +
-  labs(
-    x = "Correlation",
-    y = "Count",
-    title = "Distribution of Correlations of Extraversion and Openness"
-  ) +
-  geom_vline(xintercept = 0.2949, linetype = "dashed") +
-  annotate("text", x = 0.21, y = Inf, label = "Population Corr = 0.295", vjust = 2)
+    x = "Smoking Status",
+    y = "Weight in lbs",
+    title = "Relationship between smoking and weight"
+  )
 
 ```
 
+It appears that there are a lot of underweight babies for non-smokers compared to smokers. This could be due to sample differences, as non-smokers could have more babies overall.
+
+#### 6. Before continuing, create a cleaned version of the dataset by removing any rows with missing values for habit or weight. Name this version ncbirths_clean.
+
+```{r clean smoking data}
+
+ncbirths_clean <- ncbirths %>%
+  filter(!habit == "NA")
+
+ncbirths_clean %>%
+  ggplot(aes(
+    x = habit,
+    y = weight
+  ))+
+    geom_boxplot()+
+  labs(
+    x = "Smoking Status",
+    y = "Weight in lbs",
+    title = "Relationship between smoking and weight"
+  )
+
+```
+
+We can see that we cleaned the data to filter out the person who didn't answer the smoking question.
+
+#### 7. Calculate the observed difference in means between the baby weights of smoking and non-smoking mothers.
+
+```{r comapre mean weight smokers}
+
+ncbirths_clean %>%
+  group_by(habit) %>%
+  summarize(mean_weight = mean(weight))
+
+```
+
+We can see that non-smoking babies have a higher mean weight that smoking babies.
+
+
+#### 8. Write the hypotheses for testing if the average weights of babies born to smoking and non-smoking mothers are different.
+
+H0: Mu1 - Mu2 = 0 OR Mu1 = Mu2 (No difference between smokers and non-smokers on baby weight)
+
+H1: Mu1 - Mu2 ≠ 0 OR Mu1 ≠ Mu2 (There is a difference between smokers and non-smokers on baby weigh)
+
+Commentary: I TA for the 312 class and have hypothesis testing essentially tattooed on my frontal lobe.
+
+#### 9. Run the appropriate hypothesis test, calculate the p-value, and interpret the results in context of the data and the hypothesis test.
+
+
+```{r CI for smoking}
+#view(ncbirths_clean)
+
+ci_vals <- ncbirths_clean %>%
+  group_by(habit) %>%
+  summarize(
+    mean_weight = mean(weight),
+    se = sd(weight) / sqrt(sum(!is.na(weight))),
+    lower = mean_weight - 1.96 * se,
+    upper = mean_weight + 1.96 * se
+  )
+ci_vals
+```
+CI for non-smokers (7.043530, 7.245016)
+CI for smokers (6.586688, 7.070772)
+
+```{r visual CI for smoking}
+
+ncbirths_clean %>%
+ggplot(aes(
+  x = weight, 
+  fill = habit, 
+  color = habit)) +
+  geom_density(alpha = 0.4) +
+  
+  # Add CI
+  geom_vline(data = ci_vals, 
+             aes(xintercept = lower, 
+                 color = habit), 
+             linetype = "dashed") +
+  geom_vline(data = ci_vals, 
+             aes(xintercept = upper, 
+                 color = habit), 
+             linetype = "dashed") +
+  scale_color_manual(
+    name = "Smoking Status",
+    values = c("nonsmoker" = "blue", "smoker" = "red"))+
+  scale_fill_manual(
+    name = "Smoking Status",
+    values = c("nonsmoker" = "skyblue", "smoker" = "pink"))+
+  
+  #I got some help from ChatGPT to make it better. I clearly could've used a string and wrote out the CI, but this looked cooler
+  annotate("text", 
+         x = 2, y = 0.33, hjust = 0, size = 3.5,
+         label = paste0("Non-smoker 95% CI: [", 
+                        round(ci_vals$lower[ci_vals$habit == "nonsmoker"], 2), ", ", 
+                        round(ci_vals$upper[ci_vals$habit == "nonsmoker"], 2), "]"),
+         color = "blue") +
+annotate("text", 
+         x = 2, y = 0.30, hjust = 0, size = 3.5,
+         label = paste0("Smoker 95% CI: [", 
+                        round(ci_vals$lower[ci_vals$habit == "smoker"], 2), ", ", 
+                        round(ci_vals$upper[ci_vals$habit == "smoker"], 2), "]"),
+         color = "red")+
+  
+  labs(
+    x = "Baby weight in lbs",
+    y = NULL,
+    title = "Baby weight distribution based on smoking"
+  ) +
+  theme_bw()
+
+```
+
+Based on this graph, it looks like the two distributions heavily overlap, and there appears to be some basic overlap for the CIs.
+
+
+##### Commentary 
+I will admit that I was completely lost on how to get the p value. I looked back through the class notes and here is what I came up with:
+
+Idea 1: Create the null distribution <br/>
+I was thinking about somehow creating the null distribution that assumes the mean difference is zero. I could possibly do this by somehow bootstrapping the weight data but telling the simluation that the resulting outcome should be two stats, one for smokers and one for non-smokers
+
+Idea 2: two boostraps and join <br/>
+For this, I would filter based on smoking status. I would then bootstrap for each of the two datasets, and then join them together. The downside to this is that I don't know if I would need to bootstrap the combined bootstraps to truly achieve what I wanted to do.
+
+Idea 3: cry <br/>
+No not actually, but I am thinking that I could somehow create difference scores and bootstrap the difference scores. I only think this would work if there is equal sample size, which I know for a fact there isn't based on the summary() look at the variables.
+
+I'm thinking that I'll need to use idea one, since I'm not confident idea 2 would give me the best outcomes.
+
+```{r p value for smoking}
+seed
+
+smoking_pvalue_test <- ncbirths_clean %>%
+  group_by(habit) %>%
+  specify(response = weight) %>% 
+  generate(reps = 15000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+head(smoking_pvalue_test)
+
+```
+
+Ok so I fought with chat heavily to figure out how to do it this way via idea 1, and I have zero clue why group_by isn't doing it's job. So now I'll try idea two, but using chat's help
+
+```{r p value for smoking attempt 2}
+# Load necessary libraries
+library(dplyr)
+library(infer)
+
+
+# Split the dataset by habit (smoker vs nonsmoker)
+smoker_data <- ncbirths_clean %>% filter(habit == "smoker")
+nonsmoker_data <- ncbirths_clean %>% filter(habit == "nonsmoker")
+
+# Perform bootstrap for smokers
+smoker_bootstrap <- specify(smoker_data, response = weight) %>%
+  generate(reps = 15000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+
+# Perform bootstrap for non-smokers
+nonsmoker_bootstrap <- specify(nonsmoker_data, response = weight) %>%
+  generate(reps = 15000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+
+# Combine both bootstrap results into one data frame
+white_weight_habit_bootstrap <- bind_rows(
+  smoker_bootstrap %>% mutate(habit = "smoker"),
+  nonsmoker_bootstrap %>% mutate(habit = "nonsmoker")
+)
+
+```
+
+I went back and asked it to do it only using the libraries required thus far.
+
+```{r p value for smoking attempt 3}
+
+# Split the dataset by 'habit' (smoker vs nonsmoker)
+smoker_data <- ncbirths_clean %>% filter(habit == "smoker")
+nonsmoker_data <- ncbirths_clean %>% filter(habit == "nonsmoker")
+
+# Define a function to perform bootstrapping
+bootstrap_mean <- function(data, reps = 15000) {
+  # Create bootstrap samples and calculate means
+  replicate(reps, {
+    sample_data <- sample(data$weight, replace = TRUE)
+    mean(sample_data)
+  })
+}
+
+# Perform bootstrap for smokers
+smoker_bootstrap_means <- bootstrap_mean(smoker_data, 15000)
+
+# Perform bootstrap for non-smokers
+nonsmoker_bootstrap_means <- bootstrap_mean(nonsmoker_data, 15000)
+
+# Combine both bootstrap results into one data frame
+white_weight_habit_bootstrap <- tibble(
+  habit = c(rep("smoker", 15000), rep("nonsmoker", 15000)),
+  bootstrap_mean = c(smoker_bootstrap_means, nonsmoker_bootstrap_means)
+)
+
+```
+
+
+Another attempt using ChatGPT. Here is what I plugged into chat
+
+What if i try creating a loop using for or if or while. The loop specifies that I filter for only smoker data, simulate 1500, and apply a categorical variable with the designation "smoker". I then repeat the sequence, except I now filter for only nonsmoker data pply a categorical variable with the designation "nonsmoker" 
+
+It gave me a response I didn't like, and asked "Is it possible to restructure or recreate the code such that we won't have to combine the boostraps and that it will do it all in one go?"
+
+```{r p value for smoking attempt 4}
+
+# Set habit groups and number of reps
+habits <- c("smoker", "nonsmoker")
+n_reps <- 15000
+
+# Initialize an empty tibble to collect all bootstrap results
+white_weight_habit_bootstrap <- tibble()
+
+# Loop through both habit groups and perform bootstrap
+for (h in habits) {
+  
+  # Filter the data for the current group
+  current_data <- ncbirths_clean %>% filter(habit == h)
+  
+  # Perform bootstrap in one go (faster than nested loop)
+  boot_means <- map_dbl(1:n_reps, ~ mean(sample(current_data$weight, replace = TRUE)))
+  
+  # Append results directly to the main tibble
+  white_weight_habit_bootstrap <- bind_rows(
+    white_weight_habit_bootstrap,
+    tibble(habit = h, bootstrap_mean = boot_means)
+  )
+}
+
+# View result ---- view(white_weight_habit_bootstrap)
+
+
+```
+
+
+Commentary: To figure out what is happening with group_by, I simulated data with extreme means.
+
+```{r simluate data}
+seed
+
+small <- rnorm(100, mean = 10, sd = 5)
+
+dfsmall <- data.frame(
+    score = small,
+    group = 1
+  )
+
+large <- rnorm(100, mean = 1000, sd = 5)
+
+dflarge <- data.frame(
+    score = large,
+    group = 2
+  )
+
+simulation <- full_join(dfsmall,dflarge)
+
+
+
+simluation_test1 <- simulation %>%
+  group_by(group) %>%
+  specify(response = score) %>% 
+  generate(reps = 15000, type = "bootstrap") %>%
+  calculate(stat = "mean") %>%
+  ungroup()
+
+
+
+```
+
+
+Commentary: turns out it just ignores the group_by, as the bootstrapping provides means that encompass the entire data.
+
+Commentary: Ok after talking to Mason on 4/16, we figured out this question was intended for us to run a t-test.
+
+##### 9 Answer
+
+```{r t test for smoking}
+
+t.test(weight ~ habit, data = ncbirths_clean)
+
+```
+
+Based on the T-test, we know that mothers who don't smoke have babies with a higher weight (7.144) than mothers who smoke (6.829).
+
+#### 10. Construct a 95% confidence interval for the difference between the average weights of babies born to smoking and non-smoking mothers.
+
+```{r CI for difference between smoking}
+
+mean_smoker_weight <- mean(smoker_data$weight)
+mean_nonsmoker_weight <- mean(nonsmoker_data$weight)
+sd_smoker_weight <- sd(smoker_data$weight)
+sd_nonsmoker_weight <- sd(nonsmoker_data$weight)
+
+mean_diff_smoker_weight <- mean_nonsmoker_weight - mean_smoker_weight
+
+se_smoker_weight <- sqrt(sd_smoker_weight/nrow(smoker_data))+(sd_nonsmoker_weight/nrow(nonsmoker_data))
+
+
+  
+ci_diff <- data.frame(
+    mean_weight = mean_diff_smoker_weight,
+    se = se_smoker_weight,
+    lower = mean_diff_smoker_weight - 1.96 * se_smoker_weight,
+    upper = mean_diff_smoker_weight + 1.96 * se_smoker_weight
+  )
+
+ci_diff
+```
+
+The 95% CI for the mean difference between average weights is (.11 < x > .52).
+
+Commentary: I know to use the SE, but I'm not sure if other people do. Might want to give them the equation as scaffolding?
+
+#### 11. First, a non-inference task: Determine the age cutoff for younger and mature mothers. Use a method of your choice, and explain how your method works.
+
+```{r determine cutoff mature}
+
+test_mature_upper_cutoff <- ncbirths_clean %>%
+  filter(mature == "mature mom")
+
+min(test_mature_upper_cutoff$mage)
+
+test_mature_lower_cutoff <- ncbirths_clean %>%
+  filter(mature == "younger mom")
+
+min(test_mature_lower_cutoff$mage)
+
+```
+
+I filtered based on mature mom's and saw what the lowest age for mature moms was. I did the same for young moms and looked at the maximum age. Since they're both 35, this will be the cutoff.
+
+#### 12. Conduct a hypothesis test evaluating whether the proportion of low birth weight babies is higher for mature mothers. Use alpha of .05
+
+Commentary: I will note that this question assumes people got it right originally.
+
+Null: Mu1 - Mu2 = 0 OR Mu1 = Mu2 (No difference between mature mothers on baby weight)
+
+Alternate: Mu1 - Mu2 ≠ 0 OR Mu1 ≠ Mu2 (low birth weight babies is higher for mature mothers)
+
+```{r test lowbirthweight}
+
+t_test_LBW <- ncbirths %>%
+  mutate(lowbirthweight_numeric = case_when(
+    lowbirthweight == "not low" ~ 0,
+    lowbirthweight == "low" ~ 1
+  ))
+
+t.test(lowbirthweight_numeric ~ mature, data = t_test_LBW)
+
+```
+Assuming I did this correctly, there is no difference between younger and mature mothers for babies with low birth weight (p = .37)
+
+#### 13. Calculate a confidence interval for the difference between the proportions of low birth weight babies between mature and younger mothers. Interpret the interval in the context of the data and explain what it means.
+
+```{r CI for low birth weight}
+
+t_test_LBW <- ncbirths %>%
+  mutate(lowbirthweight_numeric = case_when(
+    lowbirthweight == "not low" ~ 0,
+    lowbirthweight == "low" ~ 1
+  ))
+
+mature_low_weight <- t_test_LBW %>%
+  filter(mature == "mature mom")
+young_low_weight <- t_test_LBW %>%
+  filter(mature == "younger mom")
+
+
+prop_mature_low <- mean(mature_low_weight$lowbirthweight_numeric)
+prop_young_low <- mean(young_low_weight$lowbirthweight_numeric)
+
+
+diff_maturity_lowweight_mean <- prop_mature_low - prop_young_low
+
+diff_maturity_lowweight_sd <- sqrt((1-prop_mature_low)/nrow(mature_low_weight)) + ((1-prop_young_low)/nrow(young_low_weight))
+
+
+  
+ci_lowweight_dif <- data.frame(
+    mean_weight = diff_maturity_lowweight_mean,
+    se = diff_maturity_lowweight_sd,
+    lower = diff_maturity_lowweight_mean - 1.96 * diff_maturity_lowweight_sd,
+    upper = diff_maturity_lowweight_mean + 1.96 * diff_maturity_lowweight_sd
+  )
+
+ci_lowweight_dif
+
+```
+
+The CI is (-0.1319813, 0.1881251). Since the CI strattles zero, I know it's non-significant. If I had to guess what the CI represented, it would represent how large the difference is between the probability of a young mother giving birth to an underweight baby and an older mother giving birth to an underweight baby.
+
+Commentary: Learned SE when looking at proportions is (1-prop) for each group instead of of the sd. Might be helpful to rewrite SE for proportions or give students a hint to google it.

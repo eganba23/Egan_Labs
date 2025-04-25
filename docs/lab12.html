@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Benjamin Egan" />
 
 
-<title>Lab 12 - Colonizing Mars</title>
+<title>Commentary on Lab 12 - Smoking during pregnancy</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -285,6 +286,9 @@ $(document).ready(function () {
 <li>
   <a href="lab12.html">Lab 12</a>
 </li>
+<li>
+  <a href="lab13.html">Lab 13</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -297,468 +301,733 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Lab 12 - Colonizing Mars</h1>
+<h1 class="title toc-ignore">Commentary on Lab 12 - Smoking during
+pregnancy</h1>
+<h4 class="author">Benjamin Egan</h4>
 
 </div>
 
 
-<div id="created-on-1292025" class="section level4">
-<h4>Created on 1/29/2025</h4>
+<div id="created-4142025" class="section level4">
+<h4>Created 4/14/2025</h4>
+<p>Link to the assignment page, at the time of creation: <a
+href="https://web.archive.org/web/20250414135227/https://datascience4psych.github.io/DataScience4Psych/lab12.html"
+class="uri">https://web.archive.org/web/20250414135227/https://datascience4psych.github.io/DataScience4Psych/lab12.html</a></p>
+<p>Link to assignment page as of April 25 2025: <a
+href="https://datascience4psych.github.io/DataScience4Psych/lab12.html"
+class="uri">https://datascience4psych.github.io/DataScience4Psych/lab12.html</a></p>
 </div>
-<div id="completed-on-4232025" class="section level4">
-<h4>Completed on 4/23/2025</h4>
-<p>Link to assignment:<a
-href="https://datascience4psych.github.io/DataScience4Psych/lab13.html"
-class="uri">https://datascience4psych.github.io/DataScience4Psych/lab13.html</a></p>
-<p>Link to archived assignment:<a
-href="https://web.archive.org/web/20250414135229/https://datascience4psych.github.io/DataScience4Psych/lab13.html#exercise-4-preparing-for-the-unexpected"
-class="uri">https://web.archive.org/web/20250414135229/https://datascience4psych.github.io/DataScience4Psych/lab13.html#exercise-4-preparing-for-the-unexpected</a></p>
-</div>
-<div id="exercise-1---simulating-colonists" class="section level3">
-<h3>Exercise 1 - Simulating colonists</h3>
-<pre class="r"><code>set.seed(123)
-
-age &lt;- rnorm(100, mean = 30, sd = 5)
-
-df_colonists &lt;- data.frame(id = 1:100, age)</code></pre>
-<pre class="r"><code>data.frame(df_colonists) %&gt;%
-ggplot(
- aes(x=age)
-)+
-  theme_bw()+
-  geom_histogram(binwidth=2,color=&quot;black&quot;, fill=&quot;blue&quot;) +
-  labs(title = &quot;Histogram of Colonists Ages by Seed&quot;,
-       x = &quot;Age&quot;, y = &quot;Frequency&quot;)</code></pre>
-<p><img src="lab12_files/figure-html/1.1%20-%20visualizing%20base%20colonists-1.png" width="672" /></p>
-<p>This is an age distribution graph. It created a roughly normal
-distribution that is centered at 30. It looks like changing the seed
-makes the distribution more normal. The 100 seed looks normally
-distributed and the 1000 seed even more so. Looks like it’s due to
-random chance, as 999 seed doesn’t have the nice bellcurve shape.</p>
-<pre class="r"><code>role &lt;- rep(c(&quot;engineer&quot;, &quot;scientist&quot;, &quot;medic&quot;), 
-             each = 34, 
-             length.out = 100)
-
-df_colonists &lt;- df_colonists %&gt;%
-  mutate(role)
-
-print(role)</code></pre>
-<pre><code>##   [1] &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot; 
-##   [7] &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot; 
-##  [13] &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot; 
-##  [19] &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot; 
-##  [25] &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot; 
-##  [31] &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;engineer&quot;  &quot;scientist&quot; &quot;scientist&quot;
-##  [37] &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot;
-##  [43] &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot;
-##  [49] &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot;
-##  [55] &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot;
-##  [61] &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot; &quot;scientist&quot;
-##  [67] &quot;scientist&quot; &quot;scientist&quot; &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;    
-##  [73] &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;    
-##  [79] &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;    
-##  [85] &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;    
-##  [91] &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;    
-##  [97] &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;     &quot;medic&quot;</code></pre>
-<p>Here I assigned each of them roles. I chose this method mostly out of
-pure randomness. But I like that it listed out each role together.</p>
-<div id="health-can-be-measured-using-the-marsgar"
+<div id="commentary-on-lab-12" class="section level2">
+<h2>Commentary on Lab 12</h2>
+<p>I will be walking through lab 12, designed to practice data
+manipulation, visualization, hypothesis testing, and calculating
+confidence intervals. Questions and comments from the lab that I will be
+addressing will be in bold. My commentary will always have “Commentary:”
+infront. This can make it easier to quickly skim through the document by
+searching for the word commentary.</p>
+<p>Loading the data</p>
+<pre class="r"><code>data(ncbirths)
+#view(ncbirths)</code></pre>
+<div
+id="before-analyzing-any-new-dataset-its-important-to-get-to-know-your-data.-start-by-summarizing-the-variables-and-determining-if-their-data-type.-are-they-categorical-are-they-numerical-for-numerical-variables-check-for-outliers.-if-you-arent-sure-or-want-to-take-a-closer-look-at-the-data-create-a-graph."
 class="section level4">
-<h4>Health can be measured using the MARSGAR</h4>
-<pre class="r"><code>set.seed(123)
-
-df_colonists$marsgar &lt;- runif(100, min = 40, max = 100)
-
-df_colonists %&gt;%
-ggplot( aes(
-    x = age,
-    y = marsgar
-  ) )+
-  theme_bw()+
-  geom_point()+
-  geom_smooth(method=lm, color = &quot;black&quot;,se = FALSE)+
-  labs(
-      x = &quot;Age&quot;,
-      y = &quot;MARSGAR&quot;,
-      title = &quot;Scatterplot of Age and Health&quot;
-  )</code></pre>
-<p><img src="lab12_files/figure-html/1.4%20heathy-1.png" width="672" /></p>
-</div>
-</div>
-<div id="exercise-2---growing-the-colonists-skills"
-class="section level3">
-<h3>Exercise 2 - Growing the colonists’ skills</h3>
-<pre class="r"><code>set.seed(1235)
-
-df_colonists$technical_skills &lt;- 2 * df_colonists$age + rnorm(100, mean = 0, sd = 1)
-
-
-df_colonists %&gt;%
-lm(technical_skills = 2 * age + noise)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = ., technical_skills = 2 * age + noise)
-## 
-## Coefficients:
-##      (Intercept)               age         rolemedic     rolescientist  
-##         11.42824           0.93744          67.73639          35.05438  
-##          marsgar  technical_skills  
-##          0.08384          -0.47441</code></pre>
-<pre class="r"><code>df_colonists %&gt;%
-  ggplot(aes(
-    x = age,
-    y = technical_skills
-  ))+
-  geom_point(alpha = .6)+
-  geom_line(stat = &quot;smooth&quot;, method=&quot;lm&quot;, alpha = .6, color = &quot;blue&quot;, se = FALSE)+
-  labs(
-    x = &quot;Age&quot;,
-    y = &quot;Technical Skill&quot;,
-    title = &quot;Scatterplot of Colonist Age and Technical Skills&quot;
-  )</code></pre>
-<p><img src="lab12_files/figure-html/2.1%20technical%20skills%20and%20visual-1.png" width="672" /></p>
-<p>Here we can see that age is about evenly distributed among the
-roles</p>
-<pre class="r"><code>df_colonists %&gt;%
-  ggplot(aes(
-    x = age,
-    y = technical_skills,
-    color = as.factor(role)
-  ))+
-  geom_point(alpha = .6)+
-  scale_color_manual(values=c(&quot;blue&quot;, &quot;red&quot;,&quot;green4&quot;))+
-  geom_line(stat = &quot;smooth&quot;, method=&quot;lm&quot;, alpha = .6, color = &quot;black&quot;, se = FALSE)+
-  labs(
-    x = &quot;Age&quot;,
-    y = &quot;Technical Skill&quot;,
-    color = &quot;Role&quot;,
-    title = &quot;Scatterplot of Colonist Age and Technical Skills by Role&quot;
-  )</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="lab12_files/figure-html/Plot%20age%20and%20tehcnical%20skill%20by%20role-1.png" width="672" /></p>
-</div>
-<div id="problem-solving-for-each-colonist" class="section level3">
-<h3>Problem solving for each colonist</h3>
-<pre class="r"><code>d_engineer &lt;- rnorm(100, mean = 40, sd = 5)
-d_scientist &lt;- rnorm(100, mean = 60, sd = 7)
-d_medic &lt;- rnorm(100, mean = 90, sd = 2)
-
-
-
-df_colonists &lt;- df_colonists %&gt;%
-mutate(problem_solving = case_when(
-    role == &quot;engineer&quot; ~ d_engineer,
-    role == &quot;scientist&quot; ~ d_scientist,
-    role == &quot;medic&quot; ~ d_medic
-  ))
-
-
-df_colonists %&gt;%
-  ggplot(aes(
-    x = problem_solving,
-    color = role,
-    fill = role
-  ))+
-scale_fill_manual(values=c(&quot;blue&quot;, &quot;red&quot;,&quot;green4&quot;))+
-  scale_color_manual(values=c(&quot;blue&quot;, &quot;red&quot;,&quot;green4&quot;))+
-  geom_density(alpha = 0.7) +
-  theme_bw()+
-  labs(
-    y = NULL,
-    x = &quot;Level of Problem Solving&quot;
-  )</code></pre>
-<p><img src="lab12_files/figure-html/problem%20solving-1.png" width="672" /></p>
-</div>
-<div id="using-mvrnorm" class="section level2">
-<h2>Using mvrnorm</h2>
-<pre class="r"><code>mean_traits &lt;- c(50, 50)
-cov_matrix &lt;- matrix(c(100, 50, 
-                       50, 100), ncol = 2)
-
-
-
-traits_data &lt;- mvrnorm(n = 100, mu = mean_traits, Sigma = cov_matrix, empirical = FALSE)
-
-colnames(traits_data) &lt;- c(&quot;resilience&quot;, &quot;agreeableness&quot;)
-
-df_colonists &lt;- cbind(df_colonists, traits_data)
-
-
-df_colonists %&gt;%
-  ggplot(aes(
-    x = resilience,
-    y = agreeableness
-  ))+
-    geom_point()+
-  geom_line(stat = &quot;smooth&quot;, method=&quot;lm&quot;, alpha = .6, color = &quot;blue&quot;, se = FALSE)</code></pre>
-<p><img src="lab12_files/figure-html/simulate%20resilience%20and%20agreeableness-1.png" width="672" /></p>
-<p>I used the code provided to create a correlation matrix for the big
-5</p>
-<pre class="r"><code>seed &lt;- 123
-set.seed(123)
-
-
-n_colonists &lt;- 100
-
-
-var_names &lt;- c( &quot;EX&quot;, &quot;ES&quot;, &quot;AG&quot;, &quot;CO&quot;, &quot;OP&quot;)
-
-mean_traits &lt;- c(-.5, .5, .25, .5, 0)
-sd_traits &lt;- c(1, .9, 1, 1, 1)
-
-
-cor_matrix_bigfive &lt;- matrix(c(
-1.0000, 0.2599, 0.1972, 0.1860, 0.2949,
-0.2599, 1.0000, 0.1576, 0.2306, 0.0720,
-0.1972, 0.1576, 1.0000, 0.2866, 0.1951,
-0.1860, 0.2306, 0.2866, 1.0000, 0.1574,
-0.2949, 0.0720, 0.1951, 0.1574, 1.0000
-), nrow=5, ncol=5, byrow=TRUE,
-dimnames=list(c(&quot;EX&quot;, &quot;ES&quot;, &quot;AG&quot;, &quot;CO&quot;, &quot;OP&quot;), 
-c(&quot;EX&quot;, &quot;ES&quot;, &quot;AG&quot;, &quot;CO&quot;, &quot;OP&quot;)))
-
-
-eigen_values &lt;- eigen(cor_matrix_bigfive)$values
-is_positive_definite &lt;- all(eigen_values &gt; 0)
-
-
-cov_matrix_bigfive &lt;- cor_matrix_bigfive * (sd_traits %*% t(sd_traits))
-
-
-simulated_data &lt;- mvrnorm(n = 100, mu = mean_traits, Sigma = cov_matrix_bigfive)
-
-
-simulated_data &lt;- cbind.data.frame(colonist_id = 1:n_colonists,
-seed = seed,
-simulated_data)
-
-simulated_data$seed &lt;- NULL
-
-view(simulated_data)</code></pre>
-</div>
-<div id="preparing-for-the-unexpected" class="section level2">
-<h2>Preparing for the unexpected</h2>
-<p>I tried using a while() loop, but chat suggested using a for()
-loop.</p>
-<pre class="r"><code>max_colonies &lt;- 100
-n_colonists &lt;- 100
-MARSid_counter &lt;- 1
-
-var_names &lt;- c( &quot;EX&quot;, &quot;ES&quot;, &quot;AG&quot;, &quot;CO&quot;, &quot;OP&quot;)
-
-mean_traits &lt;- c(-.5, .5, .25, .5, 0)
-sd_traits &lt;- c(1, .9, 1, 1, 1)
-
-cor_matrix_bigfive &lt;- matrix(c(
-1.0000, 0.2599, 0.1972, 0.1860, 0.2949,
-0.2599, 1.0000, 0.1576, 0.2306, 0.0720,
-0.1972, 0.1576, 1.0000, 0.2866, 0.1951,
-0.1860, 0.2306, 0.2866, 1.0000, 0.1574,
-0.2949, 0.0720, 0.1951, 0.1574, 1.0000
-), nrow=5, ncol=5, byrow=TRUE,
-dimnames=list(c(&quot;EX&quot;, &quot;ES&quot;, &quot;AG&quot;, &quot;CO&quot;, &quot;OP&quot;), 
-c(&quot;EX&quot;, &quot;ES&quot;, &quot;AG&quot;, &quot;CO&quot;, &quot;OP&quot;)))
-
-
-cov_matrix_bigfive &lt;- cor_matrix_bigfive * (sd_traits %*% t(sd_traits))
-
-all_colonies &lt;- list()
-
-for (colony in 1:max_colonies) {
-  set.seed(123 + colony)
-  
-  traits_data &lt;- mvrnorm(n = n_colonists, mu = mean_traits, Sigma = cov_matrix_bigfive)
-  
-  df &lt;- data.frame(
-    colony = colony,
-    id_in_colony = 1:n_colonists,
-    MARSid = MARSid_counter:(MARSid_counter + n_colonists - 1),
-    seed = 123 + colony,
-    traits_data
-  )
-  names(df)[5:9] &lt;- var_names
-  
-  all_colonies[[colony]] &lt;- df
-  MARSid_counter &lt;- MARSid_counter + n_colonists
+<h4>Before analyzing any new dataset, it’s important to get to know your
+data. Start by summarizing the variables and determining if their data
+type. Are they categorical? Are they numerical? For numerical variables,
+check for outliers. If you aren’t sure or want to take a closer look at
+the data, create a graph.</h4>
+<pre class="r"><code>summary(ncbirths)</code></pre>
+<pre><code>##       fage            mage            mature        weeks             premie   
+##  Min.   :14.00   Min.   :13   mature mom :133   Min.   :20.00   full term:846  
+##  1st Qu.:25.00   1st Qu.:22   younger mom:867   1st Qu.:37.00   premie   :152  
+##  Median :30.00   Median :27                     Median :39.00   NA&#39;s     :  2  
+##  Mean   :30.26   Mean   :27                     Mean   :38.33                  
+##  3rd Qu.:35.00   3rd Qu.:32                     3rd Qu.:40.00                  
+##  Max.   :55.00   Max.   :50                     Max.   :45.00                  
+##  NA&#39;s   :171                                    NA&#39;s   :2                      
+##      visits            marital        gained          weight      
+##  Min.   : 0.0   not married:386   Min.   : 0.00   Min.   : 1.000  
+##  1st Qu.:10.0   married    :613   1st Qu.:20.00   1st Qu.: 6.380  
+##  Median :12.0   NA&#39;s       :  1   Median :30.00   Median : 7.310  
+##  Mean   :12.1                     Mean   :30.33   Mean   : 7.101  
+##  3rd Qu.:15.0                     3rd Qu.:38.00   3rd Qu.: 8.060  
+##  Max.   :30.0                     Max.   :85.00   Max.   :11.750  
+##  NA&#39;s   :9                        NA&#39;s   :27                      
+##  lowbirthweight    gender          habit          whitemom  
+##  low    :111    female:503   nonsmoker:873   not white:284  
+##  not low:889    male  :497   smoker   :126   white    :714  
+##                              NA&#39;s     :  1   NA&#39;s     :  2  
+##                                                             
+##                                                             
+##                                                             
+## </code></pre>
+<p>By using summary(), I know there are 7 categorical variables and 6
+numerical variables.</p>
+<p>I way overengineered looking for outliers, getting help from Chat
+GPT.</p>
+<pre class="r"><code>base_outlier_check &lt;- function(variable) {
+  ncbirths %&gt;%
+  ggplot(aes(x = {{ variable }})) +
+    geom_histogram(stat = &quot;count&quot;) +
+    labs(title = rlang::as_label(rlang::enquo(variable)), y = NULL)
 }
 
-big_simulated_data &lt;- do.call(rbind, all_colonies)
-big_simulated_data$seed &lt;- NULL</code></pre>
-<pre class="r"><code>colonies_means &lt;- big_simulated_data %&gt;% 
-  group_by(colony) %&gt;% 
-  summarise(mean_ex = mean(EX),
-            mean_es = mean(ES),
-            mean_ag = mean(AG),
-            mean_co = mean(CO),
-            mean_op = mean(OP)
-            )
+map(c(&quot;fage&quot;, &quot;mage&quot;,&quot;weeks&quot;,&quot;visits&quot;,&quot;gained&quot;,&quot;weight&quot;), ~ base_outlier_check(!!sym(.x)))</code></pre>
+<pre><code>## [[1]]</code></pre>
+<p><img src="lab12_files/figure-html/outlier%20check-1.png" width="672" /></p>
+<pre><code>## 
+## [[2]]</code></pre>
+<p><img src="lab12_files/figure-html/outlier%20check-2.png" width="672" /></p>
+<pre><code>## 
+## [[3]]</code></pre>
+<p><img src="lab12_files/figure-html/outlier%20check-3.png" width="672" /></p>
+<pre><code>## 
+## [[4]]</code></pre>
+<p><img src="lab12_files/figure-html/outlier%20check-4.png" width="672" /></p>
+<pre><code>## 
+## [[5]]</code></pre>
+<p><img src="lab12_files/figure-html/outlier%20check-5.png" width="672" /></p>
+<pre><code>## 
+## [[6]]</code></pre>
+<p><img src="lab12_files/figure-html/outlier%20check-6.png" width="672" /></p>
+<p>mage could have an outlier on the upper end. I don’t think weeks has
+an outlier, even though it’s skewed left. visits may have an outlier on
+the upper end. weight might have one or two on the upper end, but it’s
+skewed left.</p>
+<p>Commentary: This was pretty basic, and I made it way harder than it
+had to be. This could, however, be a good moment to throw it back to lab
+8 and show a way to use a function. I would just guide them on the
+labeling bit, as it can be tricky. You can use do what I did and use
+base R. This allows you to input all the variables at once using map().
+If you use tidyverse for the label and use
+deparse(substitute(variable)), you have to individually input each
+function and cannot mass input.</p>
+</div>
+<div
+id="what-are-the-cases-in-this-data-set-how-many-cases-are-there-in-our-sample"
+class="section level4">
+<h4>1. What are the cases in this data set? How many cases are there in
+our sample?</h4>
+<pre class="r"><code>ncbirths %&gt;%
+nrow()</code></pre>
+<pre><code>## [1] 1000</code></pre>
+<p>There are 1000 cases, as each row represents an individual birth.</p>
+</div>
+<div
+id="create-a-filtered-data-frame-called-ncbirths_white-that-contains-data-only-from-white-mothers.-then-calculate-the-mean-of-the-weights-of-their-babies."
+class="section level3">
+<h3>2. Create a filtered data frame called ncbirths_white that contains
+data only from White mothers. Then, calculate the mean of the weights of
+their babies.</h3>
+<pre class="r"><code>ncbirths_white &lt;- ncbirths %&gt;%
+  filter(whitemom == &quot;white&quot;)
 
-means_long &lt;- colonies_means %&gt;%
-  pivot_longer(cols = -colony)
-
-colonies_means &lt;- means_long %&gt;%
-  mutate(big_5 = case_when(
-    name == &quot;mean_ex&quot; ~ &quot;Extraversion&quot;,
-    name == &quot;mean_es&quot; ~ &quot;Neuroticism&quot;,
-    name == &quot;mean_ag&quot; ~ &quot;Agreeableness&quot;,
-    name == &quot;mean_co&quot; ~ &quot;Conscientiousness&quot;,
-    name == &quot;mean_op&quot; ~ &quot;Openess&quot;
-  ))
-
-names(colonies_means)[names(colonies_means) == &quot;value&quot;] &lt;- &quot;Mean&quot;
-
-colonies_sd &lt;- big_simulated_data %&gt;% 
-  group_by(colony) %&gt;% 
-  summarise(
-            sd_ex = sd(EX),
-            sd_es = sd(ES),
-            sd_ag = sd(AG),
-            sd_co = sd(CO),
-            sd_op = sd(OP)
-            )
-
-sd_long &lt;- colonies_sd %&gt;%
-  pivot_longer(cols = -colony)
-
-colonies_sd &lt;- sd_long %&gt;%
-  mutate(big_5 = case_when(
-    name == &quot;sd_ex&quot; ~ &quot;Extraversion&quot;,
-    name == &quot;sd_es&quot; ~ &quot;Neuroticism&quot;,
-    name == &quot;sd_ag&quot; ~ &quot;Agreeableness&quot;,
-    name == &quot;sd_co&quot; ~ &quot;Conscientiousness&quot;,
-    name == &quot;sd_op&quot; ~ &quot;Openess&quot;
-  ))
-
-names(colonies_sd)[names(colonies_sd) == &quot;value&quot;] &lt;- &quot;Standard Deviation&quot;
-
-
-
-colonies_stats &lt;- full_join(colonies_means, colonies_sd, by = c(&quot;colony&quot;, &quot;big_5&quot;))
-
-
-
-view(colonies_stats)</code></pre>
-<pre class="r"><code>means_big_data %&gt;%
-ggplot(
-  aes(x = mean_ex)) +
-  geom_histogram(color = &quot;black&quot;, fill = &quot;blue&quot;, bins = 20) +
-  labs(
-    x = &quot;Mean Extraversion&quot;, 
-    y = NULL,
-    title = &quot;Distribution of Extraversion Mean&quot;,
-    subtitle = &quot;Possible values range from -1 to 1&quot;
-    )+
-  geom_vline(xintercept = -0.5, 
-             color = &quot;white&quot;,
-             linetype = &quot;dashed&quot;) +
-  annotate(&quot;text&quot;, 
-           x = -0.44, y = Inf, 
-           label = &quot;Population Mean = -0.5&quot;, 
-           vjust = 2, 
-           color = &quot;black&quot;)
-
-
-
-means_big_data %&gt;%
-ggplot(
-  aes(x = sd_ex)) +
-  geom_histogram(color = &quot;black&quot;, fill = &quot;red3&quot;, bins = 20) +
-  labs(
-    x = &quot;SD Extraversion&quot;,
-    y = NULL,
-    title = &quot;Distribution of Extraversion Standard Deviation&quot;)+
-  geom_vline(xintercept = 1, 
-             color = &quot;black&quot;, 
-             linetype = &quot;dashed&quot;) +
-  annotate(&quot;text&quot;, 
-           x = .96, y = Inf, 
-           label = &quot;Population SD = 1&quot;, 
-           vjust = 2,
-           color = &quot;black&quot;) 
-
-#correlation
-means_big_data %&gt;%
+mean(ncbirths_white$weight)</code></pre>
+<pre><code>## [1] 7.250462</code></pre>
+<p>The mean weight of the white babies is 7.25 lbs. The hypothesis
+states that there is no change in weight since 1995 (i.e. mu = 7.43).
+Since white babies weigh less, we need to figure out if this is a
+meaningful difference.</p>
+<p>Commentary: You/someone else included a note in the code that says
+“Mason make this clearer to why we need to actually do this.” I don’t
+think you need to explain, if they watched the videos or viewed the
+slides. What I would like more clarification on is question 3. My
+imagination for an answer is to create a visual for the data and see if
+mu falls within the CI in this sample.</p>
+</div>
+<div
+id="are-the-criteria-necessary-for-conducting-simulation-based-inference-satisfied-explain-your-reasoning."
+class="section level3">
+<h3>3. Are the criteria necessary for conducting simulation-based
+inference satisfied? Explain your reasoning.</h3>
+<pre class="r"><code>ncbirths_white %&gt;%
   ggplot(aes(
-   x = mean_ex,
-   y = mean_op
-   ))+
-  geom_point(alpha = .6)+
-  geom_smooth(method=&#39;lm&#39;, se = FALSE, formula= y~x)+
-  stat_cor(method = &quot;pearson&quot;, label.x = -.35, label.y = .03)+
+    x = weight
+  ))+
+  geom_histogram(stat = &quot;count&quot;, color = &quot;blue&quot;)+
+  geom_vline(xintercept = 7.43, 
+               color = &quot;white&quot;, 
+               linetype = &quot;dashed&quot;)+
+   geom_vline(xintercept = 7.25, 
+               color = &quot;red&quot;, 
+               linetype = &quot;dashed&quot;)+
+  annotate(&quot;text&quot;, 
+           x = 4, y = Inf, 
+           label = &quot;White = Mu, Red = Sample mean&quot;, 
+           vjust = 2, 
+           color = &quot;black&quot;)+
+  theme_bw()+
   labs(
-    x = &quot;Extraversion Means&quot;,
-    y = &quot;Openness Means&quot;,
-    title = &quot;Correlation of Extraversion and Openness across Colonies&quot;
+    x = &quot;Weight in lbs&quot;,
+    y = NULL,
+    title = &quot;Distriubtion of weight&quot;,
+    subtitle = &quot;How does this shape up to the popluation mean?&quot;
+  )</code></pre>
+<pre><code>## Warning in geom_histogram(stat = &quot;count&quot;, color = &quot;blue&quot;): Ignoring unknown
+## parameters: `binwidth`, `bins`, and `pad`</code></pre>
+<p><img src="lab12_files/figure-html/should%20we%20baby%20weight%20hypothesis%20test-1.png" width="672" />
+Based on this graph, I would guess that we probably would fail to
+reject, considering the mean weight is so close to the population
+weight. But this is only one sample, so it makes sense to use
+bootstrapping to better estimate the difference.</p>
+</div>
+</div>
+<div
+id="run-the-appropriate-hypothesis-test-visualize-the-null-distribution-calculate-the-p-value-and-interpret-the-results-in-the-context-of-the-data-and-the-hypothesis-test."
+class="section level2">
+<h2>4. Run the appropriate hypothesis test, visualize the null
+distribution, calculate the p-value, and interpret the results in the
+context of the data and the hypothesis test.</h2>
+<div id="steps-for-hypothesis-testing" class="section level4">
+<h4>Steps for hypothesis testing</h4>
+<ul>
+<li>take a bootstrap sample of from the original sample</li>
+<li>calculate this bootstrap sample’s mean</li>
+<li>repeat these two steps a large number of times to create a bootstrap
+distribution of means centered at the observed sample mean,</li>
+<li>shift this distribution to be centered at the null value by
+subtracting / adding X to all bootstrap mean (X = difference between
+mean of bootstrap distribution and null value)</li>
+<li>calculate the p-value as the proportion of bootstrap samples that
+yielded a sample mean at least as extreme as the observed sample
+mean.</li>
+</ul>
+<pre class="r"><code>seed</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>white_weight_bootstrap &lt;- ncbirths_white %&gt;%
+  specify(response = weight) %&gt;% 
+  generate(reps = 15000, type = &quot;bootstrap&quot;) %&gt;% 
+  calculate(stat = &quot;mean&quot;)
+
+mean_white_weight_boostrap &lt;- mean(white_weight_bootstrap$stat)
+
+white_weight_bootstrap &lt;-  white_weight_bootstrap %&gt;%
+  mutate(Cstat = (stat - 7.43))
+
+white_weight_bootstrap %&gt;%
+  summarize(lower = quantile(Cstat, 0.025),
+            upper = quantile(Cstat, 0.975))</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##    lower   upper
+##    &lt;dbl&gt;   &lt;dbl&gt;
+## 1 -0.282 -0.0763</code></pre>
+<pre class="r"><code>white_weight_bootstrap %&gt;%
+  ggplot(mapping = aes(x = Cstat)) +
+  geom_histogram() +
+  labs(title = &quot;Bootstrap distribution of means for white baby weight&quot;, y = NULL, x = &quot;Means&quot;)+
+  geom_vline(xintercept = 0, 
+               color = &quot;black&quot;, 
+               linetype = &quot;solid&quot;)+
+  annotate(&quot;text&quot;, 
+           x = -.03, y = Inf, 
+           label = &quot;Pop mean&quot;, 
+           vjust = 2, 
+           color = &quot;black&quot;)+
+  geom_vline(xintercept = -0.2847633,                 #Lower CI
+               color = &quot;blue&quot;, 
+               linetype = &quot;dashed&quot;)+
+  geom_vline(xintercept = -0.07682038,               #Upper CI
+               color = &quot;blue&quot;, 
+               linetype = &quot;dashed&quot;)+
+  annotate(&quot;text&quot;, 
+           x = -0.31, y = Inf, 
+           label = &quot;95% CI&quot;, 
+           vjust = 2, 
+           color = &quot;black&quot;)+
+  theme_bw()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
+<p><img src="lab12_files/figure-html/bootstrap%20weight-1.png" width="672" /></p>
+<pre class="r"><code># p value
+pvalue_white_weight &lt;- white_weight_bootstrap %&gt;%
+  mutate(sig = case_when(
+    stat &lt;= mean_white_weight_boostrap ~ 1,
+    stat &gt;= mean_white_weight_boostrap ~ 0,
+  ))
+
+
+white_weight_sig &lt;- pvalue_white_weight %&gt;%
+  filter(sig == 1)
+
+count(white_weight_sig)/15000</code></pre>
+<pre><code>##           n
+## 1 0.4981333</code></pre>
+<p>95% CI:(7.145237, 7.35318)</p>
+<p>Based on this, it’s clear that the population mean falls outside the
+confidence interval. We would reject the null and say that babies’
+weight has decreased since 1995.</p>
+<p>To calculate the p value, I created a variable that designated
+whether the mean in the bootstrap was lower than the observed mean of
+7.25. I then divided the number of significant ones by the total number
+of observations in the bootstrap to get a p of .50, indicating that the
+sample means should not be significantly different from the popluation
+mean.</p>
+<p>Commentary: I would break out the step by step instructions. It was
+easy to figure out how to make the graph based on the slides, so maybe
+add in a tip to go back and reference the slides? I will say that I
+believe I messed this up somewhere along the way, as my p value should
+be reflective of the fact that the population mean of 7.43 is way
+outside the confidence interval I estimated. If I had to guess, I either
+messed up the calculation of the p value or my interpretation of the p
+value.</p>
+</div>
+</div>
+<div id="baby-weight-vs-smoking" class="section level2">
+<h2>Baby Weight vs Smoking</h2>
+<div
+id="make-side-by-side-box-plots-displaying-the-relationship-between-habit-and-weight.-what-does-the-plot-highlight-about-the-relationship-between-these-two-variables"
+class="section level4">
+<h4>5. Make side-by-side box plots displaying the relationship between
+habit and weight. What does the plot highlight about the relationship
+between these two variables?</h4>
+<p>Commentary: I would specify here if you want us to continue to
+utilize only White babies or all babies. I am assuming you want us to
+use all babies here.</p>
+<pre class="r"><code>ncbirths %&gt;%
+  ggplot(aes(
+    x = habit,
+    y = weight
+  ))+
+    geom_boxplot()+
+  labs(
+    x = &quot;Smoking Status&quot;,
+    y = &quot;Weight in lbs&quot;,
+    title = &quot;Relationship between smoking and weight&quot;
+  )</code></pre>
+<p><img src="lab12_files/figure-html/box%20plot%20habit%20weight-1.png" width="672" /></p>
+<p>It appears that there are a lot of underweight babies for non-smokers
+compared to smokers. This could be due to sample differences, as
+non-smokers could have more babies overall.</p>
+</div>
+<div
+id="before-continuing-create-a-cleaned-version-of-the-dataset-by-removing-any-rows-with-missing-values-for-habit-or-weight.-name-this-version-ncbirths_clean."
+class="section level4">
+<h4>6. Before continuing, create a cleaned version of the dataset by
+removing any rows with missing values for habit or weight. Name this
+version ncbirths_clean.</h4>
+<pre class="r"><code>ncbirths_clean &lt;- ncbirths %&gt;%
+  filter(!habit == &quot;NA&quot;)
+
+ncbirths_clean %&gt;%
+  ggplot(aes(
+    x = habit,
+    y = weight
+  ))+
+    geom_boxplot()+
+  labs(
+    x = &quot;Smoking Status&quot;,
+    y = &quot;Weight in lbs&quot;,
+    title = &quot;Relationship between smoking and weight&quot;
+  )</code></pre>
+<p><img src="lab12_files/figure-html/clean%20smoking%20data-1.png" width="672" /></p>
+<p>We can see that we cleaned the data to filter out the person who
+didn’t answer the smoking question.</p>
+</div>
+<div
+id="calculate-the-observed-difference-in-means-between-the-baby-weights-of-smoking-and-non-smoking-mothers."
+class="section level4">
+<h4>7. Calculate the observed difference in means between the baby
+weights of smoking and non-smoking mothers.</h4>
+<pre class="r"><code>ncbirths_clean %&gt;%
+  group_by(habit) %&gt;%
+  summarize(mean_weight = mean(weight))</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   habit     mean_weight
+##   &lt;fct&gt;           &lt;dbl&gt;
+## 1 nonsmoker        7.14
+## 2 smoker           6.83</code></pre>
+<p>We can see that non-smoking babies have a higher mean weight that
+smoking babies.</p>
+</div>
+<div
+id="write-the-hypotheses-for-testing-if-the-average-weights-of-babies-born-to-smoking-and-non-smoking-mothers-are-different."
+class="section level4">
+<h4>8. Write the hypotheses for testing if the average weights of babies
+born to smoking and non-smoking mothers are different.</h4>
+<p>H0: Mu1 - Mu2 = 0 OR Mu1 = Mu2 (No difference between smokers and
+non-smokers on baby weight)</p>
+<p>H1: Mu1 - Mu2 ≠ 0 OR Mu1 ≠ Mu2 (There is a difference between smokers
+and non-smokers on baby weigh)</p>
+<p>Commentary: I TA for the 312 class and have hypothesis testing
+essentially tattooed on my frontal lobe.</p>
+</div>
+<div
+id="run-the-appropriate-hypothesis-test-calculate-the-p-value-and-interpret-the-results-in-context-of-the-data-and-the-hypothesis-test."
+class="section level4">
+<h4>9. Run the appropriate hypothesis test, calculate the p-value, and
+interpret the results in context of the data and the hypothesis
+test.</h4>
+<pre class="r"><code>#view(ncbirths_clean)
+
+ci_vals &lt;- ncbirths_clean %&gt;%
+  group_by(habit) %&gt;%
+  summarize(
+    mean_weight = mean(weight),
+    se = sd(weight) / sqrt(sum(!is.na(weight))),
+    lower = mean_weight - 1.96 * se,
+    upper = mean_weight + 1.96 * se
+  )
+ci_vals</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   habit     mean_weight     se lower upper
+##   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 nonsmoker        7.14 0.0514  7.04  7.25
+## 2 smoker           6.83 0.123   6.59  7.07</code></pre>
+<p>CI for non-smokers (7.043530, 7.245016) CI for smokers (6.586688,
+7.070772)</p>
+<pre class="r"><code>ncbirths_clean %&gt;%
+ggplot(aes(
+  x = weight, 
+  fill = habit, 
+  color = habit)) +
+  geom_density(alpha = 0.4) +
+  
+  # Add CI
+  geom_vline(data = ci_vals, 
+             aes(xintercept = lower, 
+                 color = habit), 
+             linetype = &quot;dashed&quot;) +
+  geom_vline(data = ci_vals, 
+             aes(xintercept = upper, 
+                 color = habit), 
+             linetype = &quot;dashed&quot;) +
+  scale_color_manual(
+    name = &quot;Smoking Status&quot;,
+    values = c(&quot;nonsmoker&quot; = &quot;blue&quot;, &quot;smoker&quot; = &quot;red&quot;))+
+  scale_fill_manual(
+    name = &quot;Smoking Status&quot;,
+    values = c(&quot;nonsmoker&quot; = &quot;skyblue&quot;, &quot;smoker&quot; = &quot;pink&quot;))+
+  
+  #I got some help from ChatGPT to make it better. I clearly could&#39;ve used a string and wrote out the CI, but this looked cooler
+  annotate(&quot;text&quot;, 
+         x = 2, y = 0.33, hjust = 0, size = 3.5,
+         label = paste0(&quot;Non-smoker 95% CI: [&quot;, 
+                        round(ci_vals$lower[ci_vals$habit == &quot;nonsmoker&quot;], 2), &quot;, &quot;, 
+                        round(ci_vals$upper[ci_vals$habit == &quot;nonsmoker&quot;], 2), &quot;]&quot;),
+         color = &quot;blue&quot;) +
+annotate(&quot;text&quot;, 
+         x = 2, y = 0.30, hjust = 0, size = 3.5,
+         label = paste0(&quot;Smoker 95% CI: [&quot;, 
+                        round(ci_vals$lower[ci_vals$habit == &quot;smoker&quot;], 2), &quot;, &quot;, 
+                        round(ci_vals$upper[ci_vals$habit == &quot;smoker&quot;], 2), &quot;]&quot;),
+         color = &quot;red&quot;)+
+  
+  labs(
+    x = &quot;Baby weight in lbs&quot;,
+    y = NULL,
+    title = &quot;Baby weight distribution based on smoking&quot;
+  ) +
+  theme_bw()</code></pre>
+<p><img src="lab12_files/figure-html/visual%20CI%20for%20smoking-1.png" width="672" /></p>
+<p>Based on this graph, it looks like the two distributions heavily
+overlap, and there appears to be some basic overlap for the CIs.</p>
+<div id="commentary" class="section level5">
+<h5>Commentary</h5>
+<p>I will admit that I was completely lost on how to get the p value. I
+looked back through the class notes and here is what I came up with:</p>
+<p>Idea 1: Create the null distribution <br/> I was thinking about
+somehow creating the null distribution that assumes the mean difference
+is zero. I could possibly do this by somehow bootstrapping the weight
+data but telling the simluation that the resulting outcome should be two
+stats, one for smokers and one for non-smokers</p>
+<p>Idea 2: two boostraps and join <br/> For this, I would filter based
+on smoking status. I would then bootstrap for each of the two datasets,
+and then join them together. The downside to this is that I don’t know
+if I would need to bootstrap the combined bootstraps to truly achieve
+what I wanted to do.</p>
+<p>Idea 3: cry <br/> No not actually, but I am thinking that I could
+somehow create difference scores and bootstrap the difference scores. I
+only think this would work if there is equal sample size, which I know
+for a fact there isn’t based on the summary() look at the variables.</p>
+<p>I’m thinking that I’ll need to use idea one, since I’m not confident
+idea 2 would give me the best outcomes.</p>
+<pre class="r"><code>seed</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>smoking_pvalue_test &lt;- ncbirths_clean %&gt;%
+  group_by(habit) %&gt;%
+  specify(response = weight) %&gt;% 
+  generate(reps = 15000, type = &quot;bootstrap&quot;) %&gt;% 
+  calculate(stat = &quot;mean&quot;)
+
+head(smoking_pvalue_test)</code></pre>
+<pre><code>## Response: weight (numeric)
+## # A tibble: 6 × 2
+##   replicate  stat
+##       &lt;int&gt; &lt;dbl&gt;
+## 1         1  7.14
+## 2         2  7.09
+## 3         3  7.13
+## 4         4  7.10
+## 5         5  7.09
+## 6         6  7.11</code></pre>
+<p>Ok so I fought with chat heavily to figure out how to do it this way
+via idea 1, and I have zero clue why group_by isn’t doing it’s job. So
+now I’ll try idea two, but using chat’s help</p>
+<pre class="r"><code># Load necessary libraries
+library(dplyr)
+library(infer)
+
+
+# Split the dataset by habit (smoker vs nonsmoker)
+smoker_data &lt;- ncbirths_clean %&gt;% filter(habit == &quot;smoker&quot;)
+nonsmoker_data &lt;- ncbirths_clean %&gt;% filter(habit == &quot;nonsmoker&quot;)
+
+# Perform bootstrap for smokers
+smoker_bootstrap &lt;- specify(smoker_data, response = weight) %&gt;%
+  generate(reps = 15000, type = &quot;bootstrap&quot;) %&gt;%
+  calculate(stat = &quot;mean&quot;)
+
+# Perform bootstrap for non-smokers
+nonsmoker_bootstrap &lt;- specify(nonsmoker_data, response = weight) %&gt;%
+  generate(reps = 15000, type = &quot;bootstrap&quot;) %&gt;%
+  calculate(stat = &quot;mean&quot;)
+
+# Combine both bootstrap results into one data frame
+white_weight_habit_bootstrap &lt;- bind_rows(
+  smoker_bootstrap %&gt;% mutate(habit = &quot;smoker&quot;),
+  nonsmoker_bootstrap %&gt;% mutate(habit = &quot;nonsmoker&quot;)
+)</code></pre>
+<p>I went back and asked it to do it only using the libraries required
+thus far.</p>
+<pre class="r"><code># Split the dataset by &#39;habit&#39; (smoker vs nonsmoker)
+smoker_data &lt;- ncbirths_clean %&gt;% filter(habit == &quot;smoker&quot;)
+nonsmoker_data &lt;- ncbirths_clean %&gt;% filter(habit == &quot;nonsmoker&quot;)
+
+# Define a function to perform bootstrapping
+bootstrap_mean &lt;- function(data, reps = 15000) {
+  # Create bootstrap samples and calculate means
+  replicate(reps, {
+    sample_data &lt;- sample(data$weight, replace = TRUE)
+    mean(sample_data)
+  })
+}
+
+# Perform bootstrap for smokers
+smoker_bootstrap_means &lt;- bootstrap_mean(smoker_data, 15000)
+
+# Perform bootstrap for non-smokers
+nonsmoker_bootstrap_means &lt;- bootstrap_mean(nonsmoker_data, 15000)
+
+# Combine both bootstrap results into one data frame
+white_weight_habit_bootstrap &lt;- tibble(
+  habit = c(rep(&quot;smoker&quot;, 15000), rep(&quot;nonsmoker&quot;, 15000)),
+  bootstrap_mean = c(smoker_bootstrap_means, nonsmoker_bootstrap_means)
+)</code></pre>
+<p>Another attempt using ChatGPT. Here is what I plugged into chat</p>
+<p>What if i try creating a loop using for or if or while. The loop
+specifies that I filter for only smoker data, simulate 1500, and apply a
+categorical variable with the designation “smoker”. I then repeat the
+sequence, except I now filter for only nonsmoker data pply a categorical
+variable with the designation “nonsmoker”</p>
+<p>It gave me a response I didn’t like, and asked “Is it possible to
+restructure or recreate the code such that we won’t have to combine the
+boostraps and that it will do it all in one go?”</p>
+<pre class="r"><code># Set habit groups and number of reps
+habits &lt;- c(&quot;smoker&quot;, &quot;nonsmoker&quot;)
+n_reps &lt;- 15000
+
+# Initialize an empty tibble to collect all bootstrap results
+white_weight_habit_bootstrap &lt;- tibble()
+
+# Loop through both habit groups and perform bootstrap
+for (h in habits) {
+  
+  # Filter the data for the current group
+  current_data &lt;- ncbirths_clean %&gt;% filter(habit == h)
+  
+  # Perform bootstrap in one go (faster than nested loop)
+  boot_means &lt;- map_dbl(1:n_reps, ~ mean(sample(current_data$weight, replace = TRUE)))
+  
+  # Append results directly to the main tibble
+  white_weight_habit_bootstrap &lt;- bind_rows(
+    white_weight_habit_bootstrap,
+    tibble(habit = h, bootstrap_mean = boot_means)
+  )
+}
+
+# View result ---- view(white_weight_habit_bootstrap)</code></pre>
+<p>Commentary: To figure out what is happening with group_by, I
+simulated data with extreme means.</p>
+<pre class="r"><code>seed</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>small &lt;- rnorm(100, mean = 10, sd = 5)
+
+dfsmall &lt;- data.frame(
+    score = small,
+    group = 1
   )
 
-#distribution of correlation
-means_big_data %&gt;%
-ggplot(aes(x = cor_ex_op)) +
-  geom_histogram(color = &quot;white&quot;, fill = &quot;pink&quot;, bins = 20) +
-  labs(
-    x = &quot;Correlation&quot;, 
-    y = &quot;Count&quot;, 
-    title = &quot;Distribution of Correlations of Extraversion and Openness across Colonies&quot;)+
-    geom_vline(xintercept = 0.2949, 
-               color = &quot;black&quot;, 
-               linetype = &quot;dashed&quot;) +
-  annotate(&quot;text&quot;, 
-           x = 0.21, y = Inf, 
-           label = &quot;Population Correlation = 0.295&quot;, 
-           vjust = 2, 
-           color = &quot;black&quot;)</code></pre>
-<p>For some reason I worked on it earlier and it ran, but now it
-doesn’t. This has something to do with me moving things around and not
-realizing I altered them. I asked chatGPT to recreate what I wanted.</p>
-<pre class="r"><code># First, augment colonies_stats with cross‐colony correlations of EX and OP
-cor_ex_op &lt;- big_simulated_data %&gt;%
-  group_by(colony) %&gt;%
-  summarize(cor_ex_op = cor(EX, OP))
+large &lt;- rnorm(100, mean = 1000, sd = 5)
 
-# Join that back into colonies_means / colonies_sd
-colonies_stats &lt;- colonies_stats %&gt;%
-  left_join(cor_ex_op, by = &quot;colony&quot;)
+dflarge &lt;- data.frame(
+    score = large,
+    group = 2
+  )
 
-# -----------------------------------------------------------------
-colonies_stats %&gt;%
-  filter(big_5 == &quot;Extraversion&quot;) %&gt;%
-  ggplot(aes(x = Mean)) +
-  geom_histogram(color = &quot;black&quot;, fill = &quot;blue&quot;, bins = 20) +
-  labs(
-    x = &quot;Mean Extraversion&quot;,
-    y = NULL,
-    title = &quot;Distribution of Extraversion Mean&quot;,
-    subtitle = &quot;Possible values range from -1 to 1&quot;
-  ) +
-  geom_vline(xintercept = -0.5, linetype = &quot;dashed&quot;) +
-  annotate(&quot;text&quot;, x = -0.44, y = Inf, label = &quot;Population Mean = -0.5&quot;, vjust = 2)</code></pre>
-<p><img src="lab12_files/figure-html/chat%20recreation%20of%20above-1.png" width="672" /></p>
-<pre class="r"><code># -----------------------------------------------------------------
-colonies_stats %&gt;%
-  filter(big_5 == &quot;Extraversion&quot;) %&gt;%
-  ggplot(aes(x = `Standard Deviation`)) +
-  geom_histogram(color = &quot;black&quot;, fill = &quot;red3&quot;, bins = 20) +
-  labs(
-    x = &quot;SD Extraversion&quot;,
-    y = NULL,
-    title = &quot;Distribution of Extraversion Standard Deviation&quot;
-  ) +
-  geom_vline(xintercept = 1, linetype = &quot;dashed&quot;) +
-  annotate(&quot;text&quot;, x = 0.96, y = Inf, label = &quot;Population SD = 1&quot;, vjust = 2)</code></pre>
-<p><img src="lab12_files/figure-html/chat%20recreation%20of%20above-2.png" width="672" /></p>
-<pre class="r"><code># -----------------------------------------------------------------
-# Distribution of per‐colony EX–OP correlations
-colonies_stats %&gt;%
-  ggplot(aes(x = cor_ex_op)) +
-  geom_histogram(color = &quot;white&quot;, fill = &quot;pink&quot;, bins = 20) +
-  labs(
-    x = &quot;Correlation&quot;,
-    y = &quot;Count&quot;,
-    title = &quot;Distribution of Correlations of Extraversion and Openness&quot;
-  ) +
-  geom_vline(xintercept = 0.2949, linetype = &quot;dashed&quot;) +
-  annotate(&quot;text&quot;, x = 0.21, y = Inf, label = &quot;Population Corr = 0.295&quot;, vjust = 2)</code></pre>
-<p><img src="lab12_files/figure-html/chat%20recreation%20of%20above-3.png" width="672" /></p>
+simulation &lt;- full_join(dfsmall,dflarge)</code></pre>
+<pre><code>## Joining with `by = join_by(score, group)`</code></pre>
+<pre class="r"><code>simluation_test1 &lt;- simulation %&gt;%
+  group_by(group) %&gt;%
+  specify(response = score) %&gt;% 
+  generate(reps = 15000, type = &quot;bootstrap&quot;) %&gt;%
+  calculate(stat = &quot;mean&quot;) %&gt;%
+  ungroup()</code></pre>
+<p>Commentary: turns out it just ignores the group_by, as the
+bootstrapping provides means that encompass the entire data.</p>
+<p>Commentary: Ok after talking to Mason on 4/16, we figured out this
+question was intended for us to run a t-test.</p>
+</div>
+<div id="answer" class="section level5">
+<h5>9 Answer</h5>
+<pre class="r"><code>t.test(weight ~ habit, data = ncbirths_clean)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  weight by habit
+## t = 2.359, df = 171.32, p-value = 0.01945
+## alternative hypothesis: true difference in means between group nonsmoker and group smoker is not equal to 0
+## 95 percent confidence interval:
+##  0.05151165 0.57957328
+## sample estimates:
+## mean in group nonsmoker    mean in group smoker 
+##                7.144273                6.828730</code></pre>
+<p>Based on the T-test, we know that mothers who don’t smoke have babies
+with a higher weight (7.144) than mothers who smoke (6.829).</p>
+</div>
+</div>
+<div
+id="construct-a-95-confidence-interval-for-the-difference-between-the-average-weights-of-babies-born-to-smoking-and-non-smoking-mothers."
+class="section level4">
+<h4>10. Construct a 95% confidence interval for the difference between
+the average weights of babies born to smoking and non-smoking
+mothers.</h4>
+<pre class="r"><code>mean_smoker_weight &lt;- mean(smoker_data$weight)
+mean_nonsmoker_weight &lt;- mean(nonsmoker_data$weight)
+sd_smoker_weight &lt;- sd(smoker_data$weight)
+sd_nonsmoker_weight &lt;- sd(nonsmoker_data$weight)
+
+mean_diff_smoker_weight &lt;- mean_nonsmoker_weight - mean_smoker_weight
+
+se_smoker_weight &lt;- sqrt(sd_smoker_weight/nrow(smoker_data))+(sd_nonsmoker_weight/nrow(nonsmoker_data))
+
+
+  
+ci_diff &lt;- data.frame(
+    mean_weight = mean_diff_smoker_weight,
+    se = se_smoker_weight,
+    lower = mean_diff_smoker_weight - 1.96 * se_smoker_weight,
+    upper = mean_diff_smoker_weight + 1.96 * se_smoker_weight
+  )
+
+ci_diff</code></pre>
+<pre><code>##   mean_weight        se    lower    upper
+## 1   0.3155425 0.1066273 0.106553 0.524532</code></pre>
+<p>The 95% CI for the mean difference between average weights is (.11
+&lt; x &gt; .52).</p>
+<p>Commentary: I know to use the SE, but I’m not sure if other people
+do. Might want to give them the equation as scaffolding?</p>
+</div>
+<div
+id="first-a-non-inference-task-determine-the-age-cutoff-for-younger-and-mature-mothers.-use-a-method-of-your-choice-and-explain-how-your-method-works."
+class="section level4">
+<h4>11. First, a non-inference task: Determine the age cutoff for
+younger and mature mothers. Use a method of your choice, and explain how
+your method works.</h4>
+<pre class="r"><code>test_mature_upper_cutoff &lt;- ncbirths_clean %&gt;%
+  filter(mature == &quot;mature mom&quot;)
+
+min(test_mature_upper_cutoff$mage)</code></pre>
+<pre><code>## [1] 35</code></pre>
+<pre class="r"><code>test_mature_lower_cutoff &lt;- ncbirths_clean %&gt;%
+  filter(mature == &quot;younger mom&quot;)
+
+min(test_mature_lower_cutoff$mage)</code></pre>
+<pre><code>## [1] 13</code></pre>
+<p>I filtered based on mature mom’s and saw what the lowest age for
+mature moms was. I did the same for young moms and looked at the maximum
+age. Since they’re both 35, this will be the cutoff.</p>
+</div>
+<div
+id="conduct-a-hypothesis-test-evaluating-whether-the-proportion-of-low-birth-weight-babies-is-higher-for-mature-mothers.-use-alpha-of-.05"
+class="section level4">
+<h4>12. Conduct a hypothesis test evaluating whether the proportion of
+low birth weight babies is higher for mature mothers. Use alpha of
+.05</h4>
+<p>Commentary: I will note that this question assumes people got it
+right originally.</p>
+<p>Null: Mu1 - Mu2 = 0 OR Mu1 = Mu2 (No difference between mature
+mothers on baby weight)</p>
+<p>Alternate: Mu1 - Mu2 ≠ 0 OR Mu1 ≠ Mu2 (low birth weight babies is
+higher for mature mothers)</p>
+<pre class="r"><code>t_test_LBW &lt;- ncbirths %&gt;%
+  mutate(lowbirthweight_numeric = case_when(
+    lowbirthweight == &quot;not low&quot; ~ 0,
+    lowbirthweight == &quot;low&quot; ~ 1
+  ))
+
+t.test(lowbirthweight_numeric ~ mature, data = t_test_LBW)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  lowbirthweight_numeric by mature
+## t = 0.889, df = 166.59, p-value = 0.3753
+## alternative hypothesis: true difference in means between group mature mom and group younger mom is not equal to 0
+## 95 percent confidence interval:
+##  -0.03427078  0.09041460
+## sample estimates:
+##  mean in group mature mom mean in group younger mom 
+##                 0.1353383                 0.1072664</code></pre>
+<p>Assuming I did this correctly, there is no difference between younger
+and mature mothers for babies with low birth weight (p = .37)</p>
+</div>
+<div
+id="calculate-a-confidence-interval-for-the-difference-between-the-proportions-of-low-birth-weight-babies-between-mature-and-younger-mothers.-interpret-the-interval-in-the-context-of-the-data-and-explain-what-it-means."
+class="section level4">
+<h4>13. Calculate a confidence interval for the difference between the
+proportions of low birth weight babies between mature and younger
+mothers. Interpret the interval in the context of the data and explain
+what it means.</h4>
+<pre class="r"><code>t_test_LBW &lt;- ncbirths %&gt;%
+  mutate(lowbirthweight_numeric = case_when(
+    lowbirthweight == &quot;not low&quot; ~ 0,
+    lowbirthweight == &quot;low&quot; ~ 1
+  ))
+
+mature_low_weight &lt;- t_test_LBW %&gt;%
+  filter(mature == &quot;mature mom&quot;)
+young_low_weight &lt;- t_test_LBW %&gt;%
+  filter(mature == &quot;younger mom&quot;)
+
+
+prop_mature_low &lt;- mean(mature_low_weight$lowbirthweight_numeric)
+prop_young_low &lt;- mean(young_low_weight$lowbirthweight_numeric)
+
+
+diff_maturity_lowweight_mean &lt;- prop_mature_low - prop_young_low
+
+diff_maturity_lowweight_sd &lt;- sqrt((1-prop_mature_low)/nrow(mature_low_weight)) + ((1-prop_young_low)/nrow(young_low_weight))
+
+
+  
+ci_lowweight_dif &lt;- data.frame(
+    mean_weight = diff_maturity_lowweight_mean,
+    se = diff_maturity_lowweight_sd,
+    lower = diff_maturity_lowweight_mean - 1.96 * diff_maturity_lowweight_sd,
+    upper = diff_maturity_lowweight_mean + 1.96 * diff_maturity_lowweight_sd
+  )
+
+ci_lowweight_dif</code></pre>
+<pre><code>##   mean_weight        se      lower     upper
+## 1  0.02807191 0.0816598 -0.1319813 0.1881251</code></pre>
+<p>The CI is (-0.1319813, 0.1881251). Since the CI strattles zero, I
+know it’s non-significant. If I had to guess what the CI represented, it
+would represent how large the difference is between the probability of a
+young mother giving birth to an underweight baby and an older mother
+giving birth to an underweight baby.</p>
+<p>Commentary: Learned SE when looking at proportions is (1-prop) for
+each group instead of of the sd. Might be helpful to rewrite SE for
+proportions or give students a hint to google it.</p>
+</div>
 </div>
 
 
