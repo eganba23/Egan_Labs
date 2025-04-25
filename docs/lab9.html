@@ -285,9 +285,6 @@ $(document).ready(function () {
 <li>
   <a href="lab12.html">Lab 12</a>
 </li>
-<li>
-  <a href="lab13.html">Lab 13</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -699,15 +696,16 @@ COMPAS/their recidivism.</p>
 df_percent1 &lt;- count(percent_accurate, compas_accurate)
 
 Rec_total_accurate &lt;- df_percent1 %&gt;%
-  filter(compas_accurate == 0) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>Rec_total_innacute &lt;- df_percent1 %&gt;%
-  filter(compas_accurate == 1) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>Rec_total &lt;- df_percent1 %&gt;% summarize(sum = sum(n))
+  filter(compas_accurate == 0) %&gt;% dplyr::select(n)
+
+Rec_total_innacute &lt;- df_percent1 %&gt;%
+  filter(compas_accurate == 1) %&gt;% dplyr::select(n)
+
+Rec_total &lt;- df_percent1 %&gt;% summarize(sum = sum(n))
 
 Rec_total_accurate/Rec_total*100</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;Rec_total_accurate&#39; not found</code></pre>
+<pre><code>##          n
+## 1 44.10868</code></pre>
 <pre class="r"><code>committed_crime &lt;- compas %&gt;%
   mutate(compas_accurate = case_when(
     decile_score &gt;= 7 &amp; two_year_recid == 1 ~ 1,
@@ -720,25 +718,28 @@ Rec_total_accurate/Rec_total*100</code></pre>
 df_percent2 &lt;- count(committed_crime, compas_accurate)
 
 acc_commit &lt;- df_percent2 %&gt;%
-  filter(compas_accurate == 1) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>not_acc_commit &lt;- df_percent2 %&gt;%
-  filter(compas_accurate == 2) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>acc_no_commit &lt;- df_percent2 %&gt;%
-  filter(compas_accurate == 3) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>not_acc_no_commit &lt;- df_percent2 %&gt;%
-  filter(compas_accurate == 4) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>total_breakdown &lt;- df_percent2 %&gt;% summarize(sum = sum(n))
+  filter(compas_accurate == 1) %&gt;% dplyr::select(n)
+
+not_acc_commit &lt;- df_percent2 %&gt;%
+  filter(compas_accurate == 2) %&gt;% dplyr::select(n)
+
+acc_no_commit &lt;- df_percent2 %&gt;%
+  filter(compas_accurate == 3) %&gt;% dplyr::select(n)
+
+not_acc_no_commit &lt;- df_percent2 %&gt;%
+  filter(compas_accurate == 4) %&gt;% dplyr::select(n)
+
+total_breakdown &lt;- df_percent2 %&gt;% summarize(sum = sum(n))
 
 acc_commit/total_breakdown*100</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;acc_commit&#39; not found</code></pre>
+<pre><code>##          n
+## 1 18.72747</code></pre>
 <pre class="r"><code>acc_commit/(acc_commit + not_acc_commit)*100</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;acc_commit&#39; not found</code></pre>
+<pre><code>##          n
+## 1 41.55644</code></pre>
 <pre class="r"><code>acc_no_commit/(acc_no_commit+not_acc_no_commit)*100</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;acc_no_commit&#39; not found</code></pre>
+<pre><code>##          n
+## 1 67.65077</code></pre>
 <ol start="7" style="list-style-type: decimal">
 <li>The COMPAS algorithm doesn’t perform great (44% overall accuracy,
 41% accurate among people who commit a crime). It’s mostly accurate for
@@ -779,13 +780,14 @@ race_percent &lt;- count(race_accurate, race_compas_accurate)
 
 
 White_accurate &lt;- race_percent %&gt;%
-  filter(race_compas_accurate == 1) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>Black_accurate &lt;- race_percent %&gt;%
-  filter(race_compas_accurate == 0) %&gt;% select(n)</code></pre>
-<pre><code>## Error in select(., n): unused argument (n)</code></pre>
-<pre class="r"><code>Black_accurate/(White_accurate + Black_accurate )*100</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;Black_accurate&#39; not found</code></pre>
+  filter(race_compas_accurate == 1) %&gt;% dplyr::select(n)
+
+Black_accurate &lt;- race_percent %&gt;%
+  filter(race_compas_accurate == 0) %&gt;% dplyr::select(n)
+
+Black_accurate/(White_accurate + Black_accurate )*100</code></pre>
+<pre><code>##          n
+## 1 78.26087</code></pre>
 <p>There’s a clear difference in distribution between white and black
 defendants who were classified as high risk, as 78% of people who had a
 COMPAS score above 7 were black.</p>

@@ -11,7 +11,7 @@
 
 
 
-<title>My Labs</title>
+<title>Lab 01 - Hello R</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -297,65 +297,118 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">My Labs</h1>
+<h1 class="title toc-ignore">Lab 01 - Hello R</h1>
 
 </div>
 
 
-<p>Hello!</p>
-<p>This website hosts a collection of labs completed for the <a
-href="https://datascience4psych.github.io/DataScience4Psych/">Data
-Science for Psychologists</a> course. You can find the links to
-individual labs in the header or down below. Each lab should have has a
-description of the goal, the product (computer program, hand graph,
-computer graph, etc.), the data, and some interpretation. I encourage
-you to explore them.</p>
-<div id="list-of-labs" class="section level3">
-<h3>List of Labs</h3>
-<div id="lab-1-hello-r" class="section level4">
-<h4><a href="lab1.html">Lab 1: Hello R!</a></h4>
+<div id="created-on-1162025" class="section level4">
+<h4>Created on 1/16/2025</h4>
+<p>Assignment link: <a
+href="https://datascience4psych.github.io/DataScience4Psych/lab01execercise.html"
+class="uri">https://datascience4psych.github.io/DataScience4Psych/lab01execercise.html</a></p>
+<p>Archived linked: <a
+href="https://web.archive.org/web/20250304114655/https://datascience4psych.github.io/DataScience4Psych/lab01execercise.html"
+class="uri">https://web.archive.org/web/20250304114655/https://datascience4psych.github.io/DataScience4Psych/lab01execercise.html</a></p>
 </div>
-<div id="lab-2-global-plastic-waste" class="section level4">
-<h4><a href="lab2.html">Lab 2: Global plastic waste</a></h4>
+<div id="load-packages-and-data" class="section level2">
+<h2>Load packages and data</h2>
+<pre class="r"><code>library(tidyverse) </code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.3.3</code></pre>
+<pre class="r"><code>library(datasauRus)
+#type in ?(data) to get the dataset to pull up</code></pre>
 </div>
-<div id="lab-3-nobel-laureates" class="section level4">
-<h4><a href="lab3.html">Lab 3: Nobel laureates</a></h4>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<div id="exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p>1846 rows 2 columns (assume x and y) variables are: away, bullseye,
+circle, dino, dots, h_lines, high_lines, slant_down, slant_up, star,
+v_lines, wide_lines, x_shape</p>
 </div>
-<div id="lab-4-la-quinta-is-spanish-for-next-to-dennys-pt.-1"
-class="section level4">
-<h4><a href="lab4.html">Lab 4: La Quinta is Spanish for next to Denny’s,
-Pt. 1</a></h4>
+<div id="exercise-2" class="section level3">
+<h3>Exercise 2</h3>
+<p>Code to create:</p>
+<pre class="r"><code>dino_data &lt;- datasaurus_dozen %&gt;%
+  filter(dataset == &quot;dino&quot;)
+ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
+  geom_point()</code></pre>
+<p><img src="lab1_files/figure-html/plot-dino-1.png" width="576" /></p>
+<p>Code to calculate the correlation between <code>x</code> and
+<code>y</code> in this dataset:</p>
+<pre class="r"><code>dino_data %&gt;%
+  summarize(r = cor(x, y))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##         r
+##     &lt;dbl&gt;
+## 1 -0.0645</code></pre>
+<p>Observations: | Data pulled from dinosaur dataset | ggplot function
+is being used to graph each datapoint from datasaurus_dozen/dino_data |
+data must be have x and y | almost 0 coorelation, makes sense</p>
 </div>
-<div id="lab-5-la-quinta-is-spanish-for-next-to-dennys-pt.-2"
-class="section level4">
-<h4><a href="lab5.html">Lab 5: La Quinta is Spanish for next to Denny’s,
-Pt. 2</a></h4>
+<div id="exercise-3" class="section level3">
+<h3>Exercise 3</h3>
+<p>Graph of star data</p>
+<pre class="r"><code>star_data &lt;- datasaurus_dozen %&gt;%
+  filter(dataset == &quot;star&quot;)
+ggplot(data = star_data, mapping = aes(x = x, y = y)) +
+  geom_point()</code></pre>
+<p><img src="lab1_files/figure-html/plot-star-1.png" width="576" /></p>
+<p>correlation for star data</p>
+<pre class="r"><code>star_data %&gt;%
+  summarize(r = cor(x, y))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##         r
+##     &lt;dbl&gt;
+## 1 -0.0630</code></pre>
+<p>Observations: | star had lots of datapoints around the points but not
+on the straight parts of the stars</p>
 </div>
-<div id="lab-6-ugly-charts-and-simpsons-paradox" class="section level4">
-<h4><a href="lab6.html">Lab 6: Ugly charts and Simpson’s
-paradox</a></h4>
+<div id="exercise-4" class="section level3">
+<h3>Exercise 4</h3>
+<p>Code for circle data</p>
+<pre class="r"><code>circle_data &lt;- datasaurus_dozen %&gt;%
+  filter(dataset == &quot;circle&quot;)
+ggplot(data = circle_data, mapping = aes(x = x, y = y)) +
+  geom_point()</code></pre>
+<p><img src="lab1_files/figure-html/plot-circle-1.png" width="576" /></p>
+<p>Note there’s a couple random plot points that are off</p>
+<pre class="r"><code>circle_data %&gt;%
+  summarize(r = cor(x, y))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##         r
+##     &lt;dbl&gt;
+## 1 -0.0683</code></pre>
 </div>
-<div id="lab-7-onveying-the-right-message-through-visualisation"
-class="section level4">
-<h4><a href="lab7.html">Lab 7: onveying the right message through
-visualisation</a></h4>
-</div>
-<div id="lab-8-university-of-edinburgh-art-collection"
-class="section level4">
-<h4><a href="lab8.html">Lab 8: University of Edinburgh Art
-Collection</a></h4>
-</div>
-<div id="lab-9-algorithmic-bias" class="section level4">
-<h4><a href="lab9.html">Lab 9: Algorithmic Bias</a></h4>
-</div>
-<div id="lab-10-grading-the-professor-pt.-1" class="section level4">
-<h4><a href="lab10.html">Lab 10: Grading the professor, Pt. 1</a></h4>
-</div>
-<div id="lab-11-grading-the-professor-pt.-2" class="section level4">
-<h4><a href="lab11.html">Lab 11: Grading the professor, Pt. 2</a></h4>
-</div>
-<div id="lab-12-colonizing-mars" class="section level4">
-<h4><a href="lab12.html">Lab 12: Colonizing Mars</a></h4>
+<div id="exercise-5" class="section level3">
+<h3>Exercise 5</h3>
+<p>Plots for all datasets</p>
+<pre class="r"><code>ggplot(datasaurus_dozen, aes(x = x, y = y, color = dataset)) +
+  geom_point() +
+  facet_wrap(~dataset, ncol = 3) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="lab1_files/figure-html/plot-all-1.png" width="672" /></p>
+<p>Correlations for all datasets - not currently doing what it’s
+supposed to do</p>
+<pre class="r"><code>datasaurus_dozen %&gt;%
+  group_by(dataset) %&gt;%
+  summarize(r = cor(x, y))</code></pre>
+<pre><code>## # A tibble: 13 × 2
+##    dataset          r
+##    &lt;chr&gt;        &lt;dbl&gt;
+##  1 away       -0.0641
+##  2 bullseye   -0.0686
+##  3 circle     -0.0683
+##  4 dino       -0.0645
+##  5 dots       -0.0603
+##  6 h_lines    -0.0617
+##  7 high_lines -0.0685
+##  8 slant_down -0.0690
+##  9 slant_up   -0.0686
+## 10 star       -0.0630
+## 11 v_lines    -0.0694
+## 12 wide_lines -0.0666
+## 13 x_shape    -0.0656</code></pre>
 </div>
 </div>
 

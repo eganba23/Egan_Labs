@@ -285,9 +285,6 @@ $(document).ready(function () {
 <li>
   <a href="lab12.html">Lab 12</a>
 </li>
-<li>
-  <a href="lab13.html">Lab 13</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -323,12 +320,8 @@ explore how data visualizations can sometimes mislead and learn
 techniques to correct these misrepresentations.</p>
 <p>The following visualization was shared on Twitter as “extraordinary
 misleading”.</p>
-<div class="float">
-<img src="Original_Graph.png" alt="Original Kansas Graph" />
-<div class="figcaption">Original Kansas Graph</div>
-</div>
-<div id="create-kansas-covid-data" class="section level3">
-<h3>Create Kansas COVID Data</h3>
+<p><img src="Original_Graph.png" alt="Original Kansas Graph" /> <br/>
+### Create Kansas COVID Data</p>
 <pre class="r"><code>Kansas_Mask &lt;- tribble(
   ~date, ~count, ~mask_status,
   &quot;7/12&quot;, 25.5, &quot;mask&quot;,
@@ -393,7 +386,6 @@ Kansas_Mask</code></pre>
 ##  9 7/20   20.7 mask       
 ## 10 7/21   21.3 mask       
 ## # ℹ 36 more rows</code></pre>
-</div>
 <div id="create-a-better-kansas-covid-visual" class="section level3">
 <h3>Create a better Kansas COVID Visual</h3>
 <pre class="r"><code>Kansas_Mask %&gt;%
