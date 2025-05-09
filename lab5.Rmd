@@ -320,6 +320,7 @@ Although the assignment didn't ask for it, I also decided to graph these relatio
 
 ![The plot has now become unreadable](Messy_plot.png)
 
+<br/>
 Based on this becoming unreadable, I have left the cleaner plots to represent my capabilities as a coder early on in my learning.
 
 ### Alaska

@@ -185,8 +185,3 @@ summary(m_tenure_eligible)
 ```
 
 The regression equation should be y = 4.28 - .141x, where y is score and x is tenure eligibility. This tells us the change from non-tenure track to tenure track equates for a .141 decrease in instructor score. The R squared value is .009. This means that tenure eligibility essentially does not explain variation in professor ratings.
-
-
-picture
-google to find cool stuff (digital cv, etc.)
-create website includes all my work

@@ -324,7 +324,9 @@ techniques to correct these misrepresentations.</p>
 <p>The following visualization was shared on Twitter as “extraordinary
 misleading”.</p>
 <p><img src="Original_Graph.png" alt="Original Kansas Graph" /> <br/>
-### Create Kansas COVID Data</p>
+<br/></p>
+<div id="create-kansas-covid-data" class="section level3">
+<h3>Create Kansas COVID Data</h3>
 <pre class="r"><code>Kansas_Mask &lt;- tribble(
   ~date, ~count, ~mask_status,
   &quot;7/12&quot;, 25.5, &quot;mask&quot;,
@@ -389,6 +391,7 @@ Kansas_Mask</code></pre>
 ##  9 7/20   20.7 mask       
 ## 10 7/21   21.3 mask       
 ## # ℹ 36 more rows</code></pre>
+</div>
 <div id="create-a-better-kansas-covid-visual" class="section level3">
 <h3>Create a better Kansas COVID Visual</h3>
 <pre class="r"><code>Kansas_Mask %&gt;%
@@ -480,8 +483,8 @@ ggplot(aes(
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=.5))+ 
    coord_cartesian(ylim = c(0, 2556000))</code></pre>
 <p><img src="lab7_files/figure-html/mutated%20data-1.png" width="672" /></p>
-<p>This graph can be used to remind people that COVID cases are still
-prevalent in the no-mask counties.</p>
+<p>This first graph can be used to remind people that COVID cases are
+still prevalent in the no-mask counties.</p>
 <pre class="r"><code>Kansas_Mask %&gt;%
 ggplot( aes(
   x = date,
@@ -505,9 +508,10 @@ ggplot( aes(
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())</code></pre>
 <p><img src="lab7_files/figure-html/COVID%20visual%20alternate-1.png" width="960" /></p>
-<p>We can also drop the y axis entirely to further change the data. This
-way we further push the daily changes as the most important feature
-instead of the actual number of cases.</p>
+<p>This graph is an alternate option to the second visualization. We can
+also drop the y axis entirely to further change the data. This way we
+further push the daily changes as the most important feature instead of
+the actual number of cases.</p>
 </div>
 
 

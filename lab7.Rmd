@@ -21,7 +21,8 @@ In this lab, our goal is to reconstruct and improve a data visualization concern
 The following visualization was shared on Twitter as “extraordinary misleading”.
 
 ![Original Kansas Graph](Original_Graph.png)
-<br/>
+<br/> <br/>
+
 ### Create Kansas COVID Data
 
 ```{r Kansas COVID}
@@ -170,9 +171,7 @@ ggplot(aes(
 
 ```
 
-This graph can be used to remind people that COVID cases are still prevalent in the no-mask counties.
-
-
+This first graph can be used to remind people that COVID cases are still prevalent in the no-mask counties.
 
 
 ```{r COVID visual alternate, fig.height = 5, fig.width = 10}
@@ -203,4 +202,4 @@ ggplot( aes(
 
 ```
 
-We can also drop the y axis entirely to further change the data. This way we further push the daily changes as the most important feature instead of the actual number of cases.
+This graph is an alternate option to the second visualization. We can also drop the y axis entirely to further change the data. This way we further push the daily changes as the most important feature instead of the actual number of cases.

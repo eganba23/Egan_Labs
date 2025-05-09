@@ -9,7 +9,7 @@ Here is the link to the assignment page: https://datascience4psych.github.io/Dat
 
 Here is a link to an archvied version of the assignment: https://web.archive.org/web/20250414135239/https://datascience4psych.github.io/DataScience4Psych/lab09alt.html#part-4-understanding-the-sources-of-bias
 
-#### Note - This assignment is a work in progress and my answers may reflect this
+#### Note - The assignment I worked through was created as a 1st draft. My answers and knowledge may reflect this
 
 ```{r load-packages, message = FALSE, warning = FALSE, echo = FALSE}
 library(tidyverse)
@@ -59,7 +59,7 @@ compas %>%
 
 ```
 
-Skewed right, indicating there are more poeple with lower risk.
+Skewed right, indicating there are more people with lower risk.
 
 #### The distribution of defendants by race
 ```{r graph race, warning = FALSE}
@@ -156,6 +156,7 @@ plot_grid(Race_graph,Sex_graph, Age_graph)
 I turned to chatGPT to see if it had any suggestions on fixing this issue. It initially recommended adding the arguments ncol = 1, align = "v" to the plot_grid(). This ended up creating this... unique outcome.
 
 ![This reminds me of Stretch Armstrong](chat_suggestion.png)
+
 
 I told it I wanted the Axes to be fixed, and it gave me a great suggestion.
 
@@ -332,7 +333,7 @@ compas %>%
 
 ```
 
-This plot is more showing the breakdown of COMPAS scores based on recidivism.
+This plot is more showing the breakdown of COMPAS scores based on recidivism. <br/>
 
 ### COMPAS Accuracy
 
